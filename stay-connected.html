@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>stay-connected • Mauricio</title>
+
+  <!-- Theme -->
+  <link rel="stylesheet" href="theme.css">
+  <!-- Hack font (same as projects page now) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3/build/web/hack.css">
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Hack', monospace;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+
+    /* Layout: mirror the projects page right-third by placing this text at the left-most third cut.
+       Images occupy the right half (columns 2-3). */
+    .page {
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr; /* thirds */
+      gap: 24px;
+      align-items: center;
+      padding: 32px;
+    }
+
+    /* Left content sits in the first column, aligned to the right edge (first cut) */
+    .content {
+      grid-column: 1;
+      justify-self: end; /* align to the right edge of the first column (the first vertical cut) */
+      width: min(540px, 90%);
+    }
+
+    /* Title: 50% larger than paragraph and 25px to the left */
+    .title {
+      font-weight: 700;
+      font-size: 150%;
+      color: var(--color-title);
+      margin: 0 0 12px 0;
+      transform: translateX(-25px); /* shift 25px to the left of the text alignment */
+    }
+
+    .para {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--color-text);
+      max-width: 60ch;
+    }
+
+    /* Button style consistent with site */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1;
+      text-align: center;
+      background: var(--btn-secondary);
+      transform: translateZ(0);
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+      will-change: transform, box-shadow, filter;
+      margin-top: 10px;
+    }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .btn:active { transform: translateY(0); filter: brightness(0.98); }
+
+    /* Right half: span the 2nd and 3rd columns */
+    .media {
+      grid-column: 2 / 4;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      align-items: start;
+      justify-items: stretch;
+    }
+    .placeholder {
+      aspect-ratio: 4 / 3;
+      border: 2px dashed rgba(255,255,255,0.18);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      user-select: none;
+    }
+
+    /* Small screens: stack content */
+    @media (max-width: 800px) {
+      .page { grid-template-columns: 1fr; }
+      .content { grid-column: 1; justify-self: start; }
+      .media { grid-column: 1; grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="content" aria-label="stay-connected text">
+      <h1 class="title">stay-connected</h1>
+      <p class="para">
+        I learned how to make an app. It's simple enough to navigate.
+      </p>
+      <a class="btn" href="https://github.com/mauricodes04/stay-connected" target="_blank" rel="noopener">Repo</a>
+    </section>
+
+    <section class="media" aria-label="image placeholders">
+      <div class="placeholder">image placeholder</div>
+      <div class="placeholder">image placeholder</div>
+      <div class="placeholder">image placeholder</div>
+      <div class="placeholder">image placeholder</div>
+    </section>
+  </main>
+</body>
+</html>

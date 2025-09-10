@@ -1,0 +1,16 @@
+/* Theme configuration
+   Adjust these variables to customize colors across the site
+*/
+:root {
+  /* Background and text */
+  --color-bg: #0f1220;         /* Page background */
+  --color-text: #EDECF5;       /* Global text on dark */
+  --color-title: #cfd3e0;      /* Title color */
+  --color-subtitle: #cfd3e0;   /* Subtitle color */
+
+  /* Buttons (three shades of blue) */
+  --btn-primary: #1e40af;      /* About Me */
+  --btn-secondary: #2563eb;    /* Projects */
+  --btn-tertiary: #60a5fa;     /* Contact */
+  --btn-tertiary-text: #0b2447;/* Text on light blue button */
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects • Mauricio</title>
+
+  <!-- Roboto font for this page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Inconsolata for comparison -->
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Reuse site theme -->
+  <link rel="stylesheet" href="theme.css">
+
+  <!-- Hack font (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3/build/web/hack.css">
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Hack', monospace;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+
+    /* Right-third layout */
+    .page {
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center; /* vertical alignment */
+      padding: 32px;
+    }
+    .wrap {
+      grid-column: 3;      /* right-most column */
+      justify-self: start; /* align to left edge of right column */
+      width: auto;
+      text-align: left;
+    }
+
+    /* Directory look (no background panel; pure page bg) */
+    .panel { padding: 0; margin: 0 auto; }
+
+    .path {
+      margin: 0 0 12px;
+      color: var(--color-title);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      font-family: inherit;
+    }
+
+    .dir-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: clamp(15px, 2.2vw, 18px);
+      line-height: 1.9;
+    }
+
+    /* Ensure each entry is on its own line */
+    .dir-item { display: block; }
+    .dir-item .pipe, .dir-item .item-link { display: inline; }
+    .pipe { opacity: 0.6; }
+
+    a.item-link {
+      color: #9cc4ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a.item-link:hover { text-decoration: underline; }
+
+    .return-link { color: #C397D8; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="wrap">
+      <section class="panel" aria-label="Projects directory">
+        <h2 class="path">\\projects\\</h2>
+        <ul class="dir-list" role="list">
+          <li class="dir-item">
+            <span class="pipe">|</span>
+            <a class="item-link" href="stay-connected.html">stay-connected</a>
+          </li>
+          <li class="dir-item">
+            <span class="pipe">|</span>
+            <a class="item-link" href="time_series_demo.html">time_series_demo</a>
+          </li>
+          <li class="dir-item">
+            <span class="pipe">|</span>
+            <a class="item-link return-link" href="index.html">return</a>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

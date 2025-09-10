@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mauricio • Home</title>
+  <!-- Theme and fonts consistent with projects.html -->
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3/build/web/hack.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Hack', monospace;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    /* Right-third layout similar to projects */
+    .page {
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      padding: 32px;
+    }
+    .wrap {
+      grid-column: 3;
+      justify-self: start;
+      width: auto;
+      text-align: left;
+    }
+    .title {
+      margin: 0 0 16px;
+      color: var(--color-title);
+      font-weight: 700;
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: 0.3px;
+    }
+    .buttons { display: grid; gap: 8px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 2px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1;
+      text-align: center;
+      transform: translateZ(0);
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+      will-change: transform, box-shadow, filter;
+    }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .btn:active { transform: translateY(0); filter: brightness(0.98); }
+    .btn.primary   { background: var(--btn-primary); }
+    .btn.secondary { background: var(--btn-secondary); }
+    .btn.tertiary  { background: var(--btn-tertiary); color: var(--btn-tertiary-text); }
+    /* Small screens: center layout */
+    @media (max-width: 800px) {
+      .page { grid-template-columns: 1fr; }
+      .wrap { grid-column: 1; justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="wrap">
+      <h1 class="title">Mauricio</h1>
+      <div class="buttons">
+        <a class="btn primary" href="about.html">About me</a>
+        <a class="btn secondary" href="projects.html">Projects</a>
+        <a class="btn tertiary" href="contact.html">Contact</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

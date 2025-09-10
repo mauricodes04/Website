@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About • Mauricio</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3/build/web/hack.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Hack', monospace;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .page {
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      padding: 32px;
+    }
+    .wrap {
+      grid-column: 1;
+      justify-self: end;
+      width: min(680px, 92%);
+      text-align: left;
+    }
+    .title {
+      margin: 0 0 14px;
+      color: var(--color-title);
+      font-weight: 700;
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: 0.3px;
+    }
+    .lead {
+      margin: 0 0 14px;
+      opacity: 0.9;
+    }
+    .para {
+      margin: 0 0 10px;
+      line-height: 1.75;
+    }
+    .back { display:inline-block; margin-top: 16px; color: #9cc4ff; text-decoration: none; }
+    .back:hover { text-decoration: underline; }
+    @media (max-width: 800px) {
+      .page { grid-template-columns: 1fr; }
+      .wrap { grid-column: 1; justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="wrap" aria-label="About Mauricio">
+      <h1 class="title">About me</h1>
+      <p class="lead">A short introduction and what I'm building.</p>
+      <p class="para">
+        I enjoy building clean, practical software and simple UI patterns. This site collects small projects, demos, and experiments I'm iterating on.
+      </p>
+      <p class="para">
+        Recent focus: interactive data visualizations, browser-based simulations, and lightweight backends. I value readable code, fast feedback loops, and strong UX.
+      </p>
+      <a class="back" href="index.html">\home\</a>
+    </section>
+  </main>
+</body>
+</html>
