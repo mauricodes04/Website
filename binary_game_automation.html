@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Binary Game Automation • Mauricio</title>
+
+  <!-- Reuse site theme -->
+  <link rel="stylesheet" href="theme.css">
+  <!-- Hack font (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3/build/web/hack.css">
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Hack', monospace;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+
+    /* Vertical timeline layout */
+    .page {
+      min-height: 100dvh;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .content {
+      width: min(740px, 96%);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--color-panel, rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .video-placeholder {
+      aspect-ratio: 16/9;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 2px dashed rgba(255,255,255,0.08);
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+    }
+
+    .photo-placeholder {
+      aspect-ratio: 4/3;
+      background: rgba(0,0,0,0.06);
+      border: 2px dashed rgba(255,255,255,0.08);
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+    }
+
+    .lead { font-size: 16px; margin: 0; color: var(--color-title); }
+    .body { font-size: 15px; line-height: 1.7; color: var(--color-text); }
+
+  /* small button style consistent with other pages */
+  .wbBtn { background:#1b2133; color:#e7ecf3; border:1px solid #2a334a; border-radius:6px; padding:8px 12px; font-size:13px; cursor:pointer; text-decoration:none; display:inline-block; }
+  .wbBtn:hover { background:#232b41; }
+
+    @media (max-width: 700px) {
+      .content { gap: 16px; padding: 8px 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="content" aria-label="Binary Game Automation timeline">
+      <div class="card">
+        <div class="video-placeholder" id="videoPlaceholder">Video placeholder — add your video here</div>
+      </div>
+
+      <div class="card">
+        <p class="lead">I did it</p>
+        <p class="body">Dr. Jerald Hughes assigned the INFS 3308 class the goal to reach level 4. He mentioned a student made it to level 9 by using a mix of packet extraction and Rust programming. While working on this, I realized I know nothing about packets, and it's not easy to learn when the game is entirely client-side. So I created this instead.</p>
+      </div>
+
+      <div class="card">
+        <div class="photo-placeholder">Photo placeholder</div>
+      </div>
+
+      <div class="card">
+        <p class="lead">More background</p>
+        <p class="body">Although this doesn't use packets and I still have yet to play Rust, my program gets the job done and the high score has been shattered.</p>
+      </div>
+      <div class="card" style="display:flex; gap:12px; justify-content:flex-end;">
+        <a class="wbBtn" href="https://github.com/mauricodes04/binary-game-automation" target="_blank" rel="noopener">Repo</a>
+        <a class="wbBtn" href="projects.html">Back</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
