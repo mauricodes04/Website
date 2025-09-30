@@ -84,13 +84,11 @@
   <main class="page">
     <section class="content" aria-label="Binary Game Automation timeline">
       <div class="card">
-        <video class="video-placeholder" id="binaryVideo" controls playsinline preload="metadata" aria-label="Binary game demonstration" style="width:100%; height:auto;">
-          <!-- Prefer a web-friendly MP4 if available -->
-          <source src="binary.mp4" type="video/mp4">
-          <!-- Fallback to original MOV (QuickTime) -->
-          <source src="binary.mov" type="video/quicktime">
-          <p style="padding:12px; color:rgba(255,255,255,0.6); font-size:14px;">Your browser doesn't support embedded video. <a href="binary.mov" style="color:inherit; text-decoration:underline;">Download the video</a>.</p>
-        </video>
+        <div class="video-placeholder" role="group" aria-label="Binary game demonstration link" style="width:100%; height:auto;">
+          <div style="text-align:center; padding:12px;">
+            <a class="wbBtn" href="https://youtu.be/ak4LNP4fEp8" target="_blank" rel="noopener noreferrer" aria-label="Open YouTube video in a new tab">Watch on YouTube</a>
+          </div>
+        </div>
 
         <!-- video only: no diagnostics -->
       </div>
