@@ -1,0 +1,11 @@
+# Archive folders
+Archives/
+archives/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/

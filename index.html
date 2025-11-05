@@ -3,79 +3,404 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mauricio • Home</title>
-  <!-- Theme and fonts consistent with projects.html -->
-  <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3/build/web/hack.css">
+  <title>Mauricio Martinez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: 'Hack', monospace;
-      color: var(--color-text);
-      background: var(--color-bg);
+    html { 
+      scroll-behavior: smooth;
     }
-    /* Right-third layout similar to projects */
-    .page {
-      min-height: 100dvh;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+    html, body { 
+      height: 100%; 
+      margin: 0;
+      overflow-x: hidden;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #3D3D3D;
+      background: #F9F6F1;
+    }
+
+    /* Main container */
+    .container {
+      display: flex;
+      min-height: 100vh;
+      padding: 0 20vw; /* 1/5 margin on each side */
+      position: relative;
+    }
+
+    /* Navigation sidebar - fixed on left */
+    .nav-sidebar {
+      position: fixed;
+      top: 0;
+      left: 20vw; /* Account for left margin */
+      width: 24vw; /* 40% of 60vw usable space */
+      height: 100vh;
+      display: flex;
       align-items: center;
       padding: 32px;
+      flex-shrink: 0;
+      z-index: 100;
     }
-    .wrap {
-      grid-column: 3;
-      justify-self: start;
-      width: auto;
+
+    /* Content area - scrollable on right */
+    .content-area {
+      margin-left: 24vw; /* Width of nav sidebar */
+      width: 36vw; /* 60% of 60vw usable space */
+      flex-shrink: 0;
+    }
+
+    /* Nav content wrapper */
+    .nav-wrap {
+      width: 100%;
       text-align: left;
     }
+
     .title {
-      margin: 0 0 16px;
-      color: var(--color-title);
+      margin: 0 0 8px;
+      color: #1A1A1A;
       font-weight: 700;
-      font-size: clamp(22px, 3vw, 30px);
-      letter-spacing: 0.3px;
+      font-size: 3rem;
+      letter-spacing: -0.5px;
+      font-family: 'Inter', sans-serif;
     }
-    .buttons { display: grid; gap: 8px; }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 2px;
-      border-radius: 999px;
+    
+    .subtitle {
+      margin: 0 0 32px;
+      color: #6F6F6F;
+      font-weight: 500;
+      font-size: 1.75rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .nav-buttons { 
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .nav-link {
       text-decoration: none;
-      color: white;
-      font-weight: 600;
-      letter-spacing: 0;
-      line-height: 1;
-      text-align: center;
-      transform: translateZ(0);
-      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
-      will-change: transform, box-shadow, filter;
+      color: #6F6F6F;
+      font-weight: 500;
+      font-size: 1.5rem;
+      letter-spacing: -0.2px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.25s ease;
+      display: inline-block;
+      position: relative;
     }
-    .btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
-    .btn:active { transform: translateY(0); filter: brightness(0.98); }
-    .btn.primary   { background: var(--btn-primary); }
-    .btn.secondary { background: var(--btn-secondary); }
-    .btn.tertiary  { background: var(--btn-tertiary); color: var(--btn-tertiary-text); }
-    /* Small screens: center layout */
-    @media (max-width: 800px) {
-      .page { grid-template-columns: 1fr; }
-      .wrap { grid-column: 1; justify-self: start; }
+    
+    .nav-link:hover {
+      color: #2C2C2C;
+      text-decoration: underline;
+      text-decoration-color: #CC9544;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    
+    /* Resume link - always darker */
+    .nav-link.resume-link {
+      color: #2C2C2C;
+      font-weight: 600;
+    }
+    
+    .nav-link.resume-link:hover {
+      color: #6F6F6F;
+    }
+
+    /* Content sections */
+    .content-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 0;
+      scroll-margin-top: 0;
+    }
+
+    .section-inner {
+      width: 100%;
+    }
+
+    /* About section */
+    .section-title {
+      margin: 0 0 24px;
+      color: #1A1A1A;
+      font-weight: 700;
+      font-size: 3rem;
+      letter-spacing: -0.8px;
+      font-family: 'Inter', sans-serif;
+    }
+    .lead {
+      margin: 0 0 24px;
+      color: #4A4A4A;
+      line-height: 1.7;
+      font-size: 1.2rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+    .para {
+      margin: 0 0 18px;
+      line-height: 1.8;
+      font-size: 1.1rem;
+      font-family: 'Inter', sans-serif;
+      color: #5A5A5A;
+    }
+
+    /* Projects section */
+    .path {
+      margin: 0 0 24px;
+      color: #1A1A1A;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      font-size: 3rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .dir-list {
+      margin: 0 0 80px 0;
+      padding: 0;
+      list-style: none;
+      font-size: 1.5rem;
+      line-height: 2.2;
+    }
+    .dir-item { display: block; }
+    .pipe { 
+      opacity: 0.4;
+      color: #999;
+    }
+    a.item-link {
+      color: #6F6F6F;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.25s ease;
+    }
+    a.item-link:hover { 
+      color: #2C2C2C;
+      text-decoration: underline;
+      text-decoration-color: #CC9544;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    /* Individual project display */
+    .project-detail {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      scroll-margin-top: 0;
+      padding: 80px 0;
+    }
+    .project-card {
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      padding: 44px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .project-title {
+      font-size: 1.75rem;
+      color: #1A1A1A;
+      margin: 0 0 18px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.8px;
+    }
+    .project-desc {
+      line-height: 1.8;
+      margin: 0 0 28px;
+      color: #5A5A5A;
+      font-size: 1.1rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .project-link {
+      display: inline-block;
+      padding: 0;
+      background: transparent;
+      color: #6F6F6F;
+      text-decoration: none;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      transition: all 0.25s ease;
+      border-bottom: 2px solid #CC9544;
+      padding-bottom: 2px;
+    }
+    .project-link:hover {
+      color: #2C2C2C;
+      border-bottom-color: #B88535;
+    }
+
+    /* Contact section */
+    .contact-buttons { 
+      display: flex;
+      flex-direction: column;
+      gap: 16px; 
+      margin: 24px 0 0 0;
+      align-items: flex-start;
+    }
+    
+    .contact-buttons .contact-link {
+      text-decoration: none;
+      color: #6F6F6F;
+      font-weight: 500;
+      font-size: 1.2rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.25s ease;
+      display: inline-block;
+    }
+    
+    .contact-buttons .contact-link:hover {
+      color: #2C2C2C;
+      text-decoration: underline;
+      text-decoration-color: #CC9544;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .container {
+        padding: 0 10vw;
+      }
+      .nav-sidebar {
+        left: 10vw;
+        width: 32vw;
+      }
+      .content-area {
+        margin-left: 32vw;
+        width: 48vw;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 0 5vw;
+        flex-direction: column;
+      }
+      .nav-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        padding: 16px 20px;
+        background: #F9F6F1;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+      }
+      .content-area {
+        margin-left: 0;
+        width: 90vw;
+        padding-top: 100px;
+      }
+      .nav-buttons {
+        flex-direction: row;
+        overflow-x: auto;
+      }
+      .title {
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="page">
-    <div class="wrap">
-      <h1 class="title">Mauricio</h1>
-      <div class="buttons">
-        <a class="btn primary" href="about.html">About me</a>
-        <a class="btn secondary" href="projects.html">Projects</a>
-        <a class="btn tertiary" href="contact.html">Contact</a>
+  <div class="container">
+    <!-- Navigation Sidebar -->
+    <aside class="nav-sidebar">
+      <div class="nav-wrap">
+        <h1 class="title">Mauricio Martinez</h1>
+        <p class="subtitle">Cybersecurity Junior</p>
+        <nav class="nav-buttons">
+          <a class="nav-link" href="#about">About me</a>
+          <a class="nav-link" href="#projects">Projects</a>
+          <a class="nav-link" href="#contact">Contact</a>
+          <a class="nav-link resume-link" href="Resume.pdf" target="_blank" rel="noopener">Download Resume</a>
+        </nav>
       </div>
-    </div>
-  </main>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="content-area">
+      <!-- About Section -->
+      <section id="about" class="content-section">
+        <div class="section-inner">
+          <h2 class="section-title">About me</h2>
+          <p class="lead">Last Updated: 11/4/2025</p>
+          <p class="para">
+            I'm Mauricio Martinez, a cybersecurity student focused on data systems, applied machine learning, and community-focused technology. I work in network defense, incident response processes, and time-series analysis for system and signal data. My recent work involves analyzing water quality data from the Gulf of Mexico and developing tools to increase public access to environmental information. <br>
+            I approach computing to support informed community engagement, combining technical methods with awareness of the social and ecological conditions that shape the region. I prioritize clear technical reasoning, reproducibility, and incremental improvement across projects. Outside of academics, I enjoy working hands-on with a Raspberry Pi for embedded experimentation and MIDI-based synthesizers.
+          </p>
+          <p class="para">
+            Recent focus: NDR, MDR, EDR, IDS, IPS, and Credential Monitoring.
+          </p>
+        </div>
+      </section>
+
+      <!-- Projects Section -->
+      <section id="projects" class="content-section">
+        <div class="section-inner">
+          <h2 class="path">Projects</h2>
+          <ul class="dir-list" role="list">
+            <li class="dir-item">
+              <span class="pipe">|</span>
+              <a class="item-link" href="#gulf">Gulf</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Individual Project Section -->
+      <section id="gulf" class="project-detail">
+        <div class="project-card">
+          <h3 class="project-title">Gulf Water Quality Analysis</h3>
+          <p class="project-desc">
+            A local web app that analyzes Gulf of Mexico water-quality data, with AI-assisted characteristic matching and simple visualizations for public transparency. Run it with your own API key and view results in the browser. <br>
+            Tech Stack: Python + Flask for backend, HTML for front end, and Langchain for matching.
+          </p>
+          <img src="Gulf.png" alt="Ocean Warming example" style="width:100%;max-width:600px;height:auto;margin-bottom:28px;border-radius:8px;">
+          <a class="project-link" href="https://github.com/mauricodes04/Gulf" target="_blank" rel="noopener">
+            View on GitHub →
+          </a>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="content-section">
+        <div class="section-inner">
+          <h2 class="section-title">Contact me</h2>
+          <div class="contact-buttons">
+            <a class="contact-link" href="mailto:mauricio.martinez06@utrgv.edu?subject=Inquiry">mauricio.martinez06@utrgv.edu</a>
+            <a class="contact-link" href="https://www.linkedin.com/in/mauricio-martinez-44a933264/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="contact-link" href="https://github.com/mauricodes04" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
