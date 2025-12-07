@@ -6,309 +6,8 @@
   <title>Mauricio Martinez</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; }
-    html { 
-      scroll-behavior: smooth;
-    }
-    html, body { 
-      height: 100%; 
-      margin: 0;
-      overflow-x: hidden;
-    }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: #3D3D3D;
-      background: #F9F6F1;
-    }
-
-    /* Main container */
-    .container {
-      display: flex;
-      min-height: 100vh;
-      padding: 0 20vw; /* 1/5 margin on each side */
-      position: relative;
-    }
-
-    /* Navigation sidebar - fixed on left */
-    .nav-sidebar {
-      position: fixed;
-      top: 0;
-      left: 20vw; /* Account for left margin */
-      width: 24vw; /* 40% of 60vw usable space */
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 32px;
-      flex-shrink: 0;
-      z-index: 100;
-    }
-
-    /* Content area - scrollable on right */
-    .content-area {
-      margin-left: 24vw; /* Width of nav sidebar */
-      width: 36vw; /* 60% of 60vw usable space */
-      flex-shrink: 0;
-    }
-
-    /* Nav content wrapper */
-    .nav-wrap {
-      width: 100%;
-      text-align: left;
-    }
-
-    .title {
-      margin: 0 0 8px;
-      color: #1A1A1A;
-      font-weight: 700;
-      font-size: 3rem;
-      letter-spacing: -0.5px;
-      font-family: 'Inter', sans-serif;
-    }
-    
-    .subtitle {
-      margin: 0 0 32px;
-      color: #6F6F6F;
-      font-weight: 500;
-      font-size: 1.75rem;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .nav-buttons { 
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      width: 100%;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      color: #6F6F6F;
-      font-weight: 500;
-      font-size: 1.5rem;
-      letter-spacing: -0.2px;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.25s ease;
-      display: inline-block;
-      position: relative;
-    }
-    
-    .nav-link:hover {
-      color: #2C2C2C;
-      text-decoration: underline;
-      text-decoration-color: #CC9544;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 4px;
-    }
-    
-    /* Resume link - always darker */
-    .nav-link.resume-link {
-      color: #2C2C2C;
-      font-weight: 600;
-    }
-    
-    .nav-link.resume-link:hover {
-      color: #6F6F6F;
-    }
-
-    /* Content sections */
-    .content-section {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 80px 0;
-      scroll-margin-top: 0;
-    }
-
-    .section-inner {
-      width: 100%;
-    }
-
-    /* About section */
-    .section-title {
-      margin: 0 0 24px;
-      color: #1A1A1A;
-      font-weight: 700;
-      font-size: 3rem;
-      letter-spacing: -0.8px;
-      font-family: 'Inter', sans-serif;
-    }
-    .lead {
-      margin: 0 0 24px;
-      color: #4A4A4A;
-      line-height: 1.7;
-      font-size: 1.2rem;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-    }
-    .para {
-      margin: 0 0 18px;
-      line-height: 1.8;
-      font-size: 1.1rem;
-      font-family: 'Inter', sans-serif;
-      color: #5A5A5A;
-    }
-
-    /* Projects section */
-    .path {
-      margin: 0 0 24px;
-      color: #1A1A1A;
-      font-weight: 700;
-      letter-spacing: -0.8px;
-      font-size: 3rem;
-      font-family: 'Inter', sans-serif;
-    }
-    .dir-list {
-      margin: 0 0 80px 0;
-      padding: 0;
-      list-style: none;
-      font-size: 1.5rem;
-      line-height: 2.2;
-    }
-    .dir-item { display: block; }
-    .pipe { 
-      opacity: 0.4;
-      color: #999;
-    }
-    a.item-link {
-      color: #6F6F6F;
-      text-decoration: none;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.25s ease;
-    }
-    a.item-link:hover { 
-      color: #2C2C2C;
-      text-decoration: underline;
-      text-decoration-color: #CC9544;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 4px;
-    }
-
-    /* Individual project display */
-    .project-detail {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      scroll-margin-top: 0;
-      padding: 80px 0;
-    }
-    .project-card {
-      background: rgba(255,255,255,0.5);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      padding: 44px;
-      width: 100%;
-      max-width: 600px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    .project-title {
-      font-size: 1.75rem;
-      color: #1A1A1A;
-      margin: 0 0 18px;
-      font-weight: 700;
-      font-family: 'Inter', sans-serif;
-      letter-spacing: -0.8px;
-    }
-    .project-desc {
-      line-height: 1.8;
-      margin: 0 0 28px;
-      color: #5A5A5A;
-      font-size: 1.1rem;
-      font-family: 'Inter', sans-serif;
-    }
-    .project-link {
-      display: inline-block;
-      padding: 0;
-      background: transparent;
-      color: #6F6F6F;
-      text-decoration: none;
-      font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      font-size: 1.1rem;
-      transition: all 0.25s ease;
-      border-bottom: 2px solid #CC9544;
-      padding-bottom: 2px;
-    }
-    .project-link:hover {
-      color: #2C2C2C;
-      border-bottom-color: #B88535;
-    }
-
-    /* Contact section */
-    .contact-buttons { 
-      display: flex;
-      flex-direction: column;
-      gap: 16px; 
-      margin: 24px 0 0 0;
-      align-items: flex-start;
-    }
-    
-    .contact-buttons .contact-link {
-      text-decoration: none;
-      color: #6F6F6F;
-      font-weight: 500;
-      font-size: 1.2rem;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.25s ease;
-      display: inline-block;
-    }
-    
-    .contact-buttons .contact-link:hover {
-      color: #2C2C2C;
-      text-decoration: underline;
-      text-decoration-color: #CC9544;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 4px;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .container {
-        padding: 0 10vw;
-      }
-      .nav-sidebar {
-        left: 10vw;
-        width: 32vw;
-      }
-      .content-area {
-        margin-left: 32vw;
-        width: 48vw;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 0 5vw;
-        flex-direction: column;
-      }
-      .nav-sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: auto;
-        padding: 16px 20px;
-        background: #F9F6F1;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-      }
-      .content-area {
-        margin-left: 0;
-        width: 90vw;
-        padding-top: 100px;
-      }
-      .nav-buttons {
-        flex-direction: row;
-        overflow-x: auto;
-      }
-      .title {
-        font-size: 20px;
-        margin-bottom: 12px;
-      }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
   <div class="container">
@@ -316,9 +15,11 @@
     <aside class="nav-sidebar">
       <div class="nav-wrap">
         <h1 class="title">Mauricio Martinez</h1>
-        <p class="subtitle">Cybersecurity Junior</p>
+        <p class="subtitle">Aspiring SOC analyst</p>
         <nav class="nav-buttons">
           <a class="nav-link" href="#about">About me</a>
+          <a class="nav-link" href="#skills">Skills</a>
+          <a class="nav-link" href="#experience">Experience</a>
           <a class="nav-link" href="#projects">Projects</a>
           <a class="nav-link" href="#contact">Contact</a>
           <a class="nav-link resume-link" href="Resume.pdf" target="_blank" rel="noopener">Download Resume</a>
@@ -332,14 +33,110 @@
       <section id="about" class="content-section">
         <div class="section-inner">
           <h2 class="section-title">About me</h2>
-          <p class="lead">Last Updated: 11/22/2025</p>
+          <p class="lead">Last Updated: 12/6/2025</p>
           <p class="para">
-            I'm Mauricio Martinez, a cybersecurity student focused on community-focused technology, CVE investigations, and firewall security. I aim to work in network defense, starting with incident response processing. My recent work includes developing a barcode-to-Excel inventory logging application. <br> <br>
-            I approach computing to support my team, combining technical methods with ongoing systems to achieve complete automation. I prioritize clear technical reasoning, reproducibility, and incremental improvement across projects. Outside of academics, I enjoy working hands-on with a Raspberry Pi for embedded experimentation and MIDI-based synthesizers.
+            I'm Mauricio Martinez, a UTRGV cybersecurity student targeting Security Analyst roles. I focus on network defense, incident-response triage, log/telemetry analysis, and CVE/CWE research with MITRE ATT&CK alignment, with an added emphasis on firewall security and practical remediation workflows. I have supported vulnerability scanning in a county government environment and created repeatable organizational tools, alongside building automation projects such as a barcode-to-Excel inventory logging app.<br> <br>
+            I prioritize clear technical reasoning, reproducibility, and incremental improvement across projects, and I continue hands-on experimentation with RPi embedded systems and MIDI-based synthesizers.
           </p>
           <p class="para">
-            Recent focus: CWE Identification, investigation, and firewall management.
-          </p>
+            Recent focus: Vulnerability scanning support and NIST cybersecurity framework
+        </div>
+      </section>
+
+      <!-- Skills Section -->
+      <section id="skills" class="content-section">
+        <div class="section-inner">
+          <h2 class="section-title">Skills</h2>
+          <div class="skills-grid">
+            <div class="skill-category">
+              <h3>Security & Networking</h3>
+              <ul>
+                <li>Incident Response Fundamentals</li>
+                <li>Email security</li>
+                <li>Vulnerability Management</li>
+                <li>Threat Mapping & Research</li>
+                <li>Basic reverse engineering and cryptography concepts</li>
+              </ul>
+            </div>
+            <div class="skill-category">
+              <h3>Development</h3>
+              <ul>
+                <li>Python</li>
+                <li>JavaScript/TypeScript</li>
+                <li>HTML/CSS</li>
+                <li>NumPy, Pandas</li>
+                <li>Node.js/Express/React Native</li>
+                <li>ETL</li>
+              </ul>
+            </div>
+            <div class="skill-category">
+              <h3>Tools & Platforms</h3>
+              <ul>
+                <li>Cortex XDR</li>
+                <li>Cloudflare content filtering</li>
+                <li>Proofpoint email security & MDR</li>
+                <li>Active Directory, Nmap/Angry IP Scanner</li>
+                <li>Linux (Kali), Powershell</li>
+              </ul>
+            </div>
+            <div class="skill-category">
+              <h3>Frameworks & Standards</h3>
+              <ul>
+                <li>NIST SP 800-53</li>
+                <li>NIST Privacy Framework</li>
+                <li>MITRE ATT&CK</li>
+                <li>CVE/NVD workflows</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience Section -->
+      <section id="experience" class="content-section">
+        <div class="section-inner">
+          <h2 class="section-title">Experience</h2>
+          <div class="experience-timeline">
+
+            <div class="experience-item">
+              <div class="experience-header">
+                <h3 class="experience-role">Cybersecurity Intern</h3>
+                <p class="experience-company">Cameron County</p>
+                <p class="experience-date">2025 - Present</p>
+              </div>
+              <ul class="experience-description">
+                <li>Focused on network defense and incident response methodologies</li>
+                <li>Conducted CVE investigations and CWE identification research</li>
+                <li>Led contained phishing campaigns</li>
+              </ul>
+            </div>
+            <div class="experience-item">
+              <div class="experience-header">
+                <h3 class="experience-role">Work-Study Experience</h3>
+                <p class="experience-company">University of Texas Rio Grande Valley</p>
+                <p class="experience-date">2025 - Present</p>
+              </div>
+              <ul class="experience-description">
+                <li>Led mentorship, summer camp, and academic programs</li>
+                <li>Developed barcode-to-Excel inventory tracking system for cloud deployment</li>
+              </ul>
+            </div>
+            <div class="experience-item">
+              <div class="experience-header">
+                <h3 class="experience-role">Cybersecurity Student</h3>
+                <p class="experience-company">University of Texas Rio Grande Valley</p>
+                <p class="experience-date">2023 - 2027 (Junior)</p>
+              </div>
+              <ul class="experience-description">
+                <li>Current Junior standing</li>
+                <li>Built Gulf Water Quality Analysis web application with AI-assisted data matching</li>
+                <li>Hack Research participant, Frontera Devs member & mentee</li>
+              </ul>
+            </div>
+
+            
+
+          </div>
         </div>
       </section>
 
@@ -348,14 +145,17 @@
         <div class="section-inner">
           <h2 class="path">Projects</h2>
           <ul class="dir-list" role="list">
+            
             <li class="dir-item">
               <span class="pipe">|</span>
-              <a class="item-link" href="#gulf">Gulf</a>
+              <a class="item-link" href="#gulf">Gulf Water Quality Analysis</a>
             </li>
+
             <li class="dir-item">
               <span class="pipe">|</span>
               <a class="item-link" href="#inventory-scanner">Inventory-Scanner</a>
             </li>
+
           </ul>
         </div>
       </section>
@@ -366,9 +166,10 @@
           <h3 class="project-title">Gulf Water Quality Analysis</h3>
           <p class="project-desc">
             A local web app that analyzes Gulf of Mexico water-quality data, with AI-assisted characteristic matching and simple visualizations for public transparency. Run it with your own API key and view results in the browser. <br>
-            Tech Stack: Python + Flask for backend, HTML for front end, and Langchain for matching.
           </p>
-          <img src="Gulf.png" alt="Ocean Warming example" style="width:100%;max-width:600px;height:auto;margin-bottom:28px;border-radius:8px;">
+          <div class="project-image">
+            <img src="assets/images/Gulf.png" alt="Ocean Warming example">
+          </div>
           <a class="project-link" href="https://github.com/mauricodes04/Gulf" target="_blank" rel="noopener">
             View on GitHub →
           </a>
@@ -383,6 +184,13 @@
             A local React Native + Node.js system that scans 1D barcodes and writes entries to a structured CSV or Excel-compatible format. The app sends scanned data to a lightweight backend service, which appends or updates records for inventory tracking. Designed for offline-friendly use and simple deployment on Windows or Raspberry Pi hardware. <br>
             Tech Stack: React Native (Expo) for the mobile interface, Node.js/Express for the backend, and CSV/Excel output for storage.
           </p>
+          
+          <div class="project-image">
+            <img src="assets/images/1.png" alt="Found Screen">
+            <img src="assets/images/2.png" alt="Building Selector">
+            <img src="assets/images/3.png" alt="Done">
+          </div>
+
           <a class="project-link" href="https://github.com/mauricodes04/BarcodeScannerforCS" target="_blank" rel="noopener">
             View on GitHub →
           </a>
@@ -394,7 +202,7 @@
         <div class="section-inner">
           <h2 class="section-title">Contact me</h2>
           <div class="contact-buttons">
-            <a class="contact-link" href="mailto:mauricio.martinez06@utrgv.edu?subject=Inquiry">mauricio.martinez06@utrgv.edu</a>
+            <a class="contact-link" href="mailto:mauriciomartinezpersonal@gmail.com">mauriciomartinezpersonal@gmail.com</a>
             <a class="contact-link" href="https://www.linkedin.com/in/mauricio-martinez-44a933264/" target="_blank" rel="noopener">LinkedIn</a>
             <a class="contact-link" href="https://github.com/mauricodes04" target="_blank" rel="noopener">GitHub</a>
           </div>
