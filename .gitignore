@@ -1,15 +1,3 @@
-# Archive folders
 Archives/
-archives/
-
-# MS Office and temp files
 *.docx
 *.tmp
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# IDE files
-.vscode/
-.idea/
