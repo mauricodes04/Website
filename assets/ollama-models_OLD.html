@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ollama Models — PentAGI Compatibility (Tool-Capable Only)</title>
+  <title>Ollama Models — PentAGI Compatibility</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -383,10 +383,8 @@
       <span class="subtitle">× pentagi compatibility</span>
     </div>
     <p class="description">
-      Filtered to models with the native <code style="display:inline;padding:1px 6px;background:rgba(163,230,53,0.1);color:#a3e635;border:none">tools</code> capability in Ollama's registry — required by PentAGI's startup probe.
-      Models without it (qwen2.5-coder, deepseek-coder-v2, deepseek-r1, phi4, gemma2, codestral) fail flow creation with
-      <code style="display:inline;padding:1px 6px;background:rgba(239,68,68,0.1);color:#ef4444;border:none">no tool call ID samples collected</code>.
-      RAM estimates at Q4_K_M. VRAM ≈ RAM for full GPU offload. CPU spillover adds ~3–5× latency.
+      RAM estimates at Q4_K_M quantization. VRAM ≈ RAM for full GPU offload. CPU-only adds ~3-5× latency.
+      Ratings reflect tool calling reliability, code gen, and agent orchestration for autonomous pentesting.
     </p>
   </div>
 
@@ -456,16 +454,26 @@
 
   <script>
     const models = [
-      { name: "Qwen 2.5", ollamaTag: "qwen2.5:72b", params: "72B", paramNum: 72, quant: "Q4_K_M", ramGB: 44, vramGB: 44, contextWindow: 131072, toolCalling: 5, codeGen: 5, reasoning: 5, speed: 1, pentagiRating: 5, category: "general", notes: "Top-tier open model across all metrics. 128K context handles massive recon output. Requires dual GPU or high-VRAM setup (2× RTX 3090 / A100). Overkill for most PentAGI tasks but unmatched quality. Won't fit 8GB VRAM + 32GB RAM." },
-      { name: "Qwen 2.5", ollamaTag: "qwen2.5:32b", params: "32B", paramNum: 32, quant: "Q4_K_M", ramGB: 20, vramGB: 20, contextWindow: 131072, toolCalling: 5, codeGen: 4, reasoning: 4, speed: 2, pentagiRating: 5, category: "general", notes: "Excellent reasoning and tool use. Handles PentAGI's multi-agent delegation well. Will run on 8GB VRAM + 32GB RAM with heavy CPU offload — expect slow but correct responses." },
-      { name: "Qwen 2.5", ollamaTag: "qwen2.5:14b", params: "14B", paramNum: 14, quant: "Q4_K_M", ramGB: 10, vramGB: 10, contextWindow: 131072, toolCalling: 4, codeGen: 3, reasoning: 3, speed: 3, pentagiRating: 4, category: "general", notes: "Strong recommendation for GTX 1070 + 32GB RAM. Reliable native tool calling — unlike qwen2.5-coder:14b which lacks the tools capability and breaks PentAGI's probe. Partial GPU offload: ~4GB on GPU, ~6GB on CPU. Best balance of capability and speed on this rig." },
-      { name: "Qwen 2.5", ollamaTag: "qwen2.5:7b", params: "7B", paramNum: 7, quant: "Q4_K_M", ramGB: 5, vramGB: 5, contextWindow: 131072, toolCalling: 3, codeGen: 2, reasoning: 2, speed: 4, pentagiRating: 2, category: "general", notes: "Fits entirely in 8GB VRAM. Fast inference. Tool calling functional but unreliable on complex agent chains. Good for testing PentAGI pipeline end-to-end before stepping up to 14B." },
-      { name: "Llama 3.3", ollamaTag: "llama3.3:70b", params: "70B", paramNum: 70, quant: "Q4_K_M", ramGB: 42, vramGB: 42, contextWindow: 131072, toolCalling: 4, codeGen: 4, reasoning: 5, speed: 1, pentagiRating: 4, category: "general", notes: "Meta's flagship. Excellent reasoning, good tool use. 128K context. Requires dual GPU. Slightly behind Qwen 2.5 72B on tool calling precision for PentAGI. Won't fit 8GB VRAM + 32GB RAM." },
-      { name: "Llama 3.1", ollamaTag: "llama3.1:8b", params: "8B", paramNum: 8, quant: "Q4_K_M", ramGB: 5, vramGB: 5, contextWindow: 131072, toolCalling: 3, codeGen: 2, reasoning: 2, speed: 5, pentagiRating: 2, category: "general", notes: "Fits entirely in 8GB VRAM. Very fast. Native tool calling support but imprecise on multi-step chains. Viable fallback if Qwen 2.5 7B underperforms on specific tool formats. Good for smoke-testing." },
-      { name: "Mistral Nemo", ollamaTag: "mistral-nemo:12b", params: "12B", paramNum: 12, quant: "Q4_K_M", ramGB: 8, vramGB: 8, contextWindow: 128000, toolCalling: 4, codeGen: 3, reasoning: 3, speed: 4, pentagiRating: 3, category: "general", notes: "Fits in 8GB VRAM with minor spillover. Strong instruction following and reliable native tool calling for its size. 128K context. Solid mid-tier PentAGI option on GTX 1070 + 32GB RAM — faster than Qwen 2.5 14B at a small capability cost." },
-      { name: "Mixtral", ollamaTag: "mixtral:8x7b", params: "8x7B", paramNum: 47, quant: "Q4_K_M", ramGB: 28, vramGB: 28, contextWindow: 32768, toolCalling: 4, codeGen: 3, reasoning: 4, speed: 2, pentagiRating: 3, category: "general", notes: "MoE architecture — only ~12B params active per token, so faster than size suggests. Fits 32GB RAM with heavy CPU reliance on 8GB VRAM. Decent tool calling. 32K context is a bottleneck for large nmap/recon output in PentAGI." },
-      { name: "Command R+", ollamaTag: "command-r-plus:104b", params: "104B", paramNum: 104, quant: "Q4_K_M", ramGB: 62, vramGB: 62, contextWindow: 131072, toolCalling: 5, codeGen: 3, reasoning: 4, speed: 1, pentagiRating: 4, category: "general", notes: "Cohere's flagship. Built-in RAG and tool use primitives — aligns well with PentAGI's agent architecture. 128K context. Requires enterprise GPU (A100 80GB or multi-GPU). Won't fit 8GB VRAM + 32GB RAM." },
-      { name: "Command R", ollamaTag: "command-r:35b", params: "35B", paramNum: 35, quant: "Q4_K_M", ramGB: 22, vramGB: 22, contextWindow: 131072, toolCalling: 4, codeGen: 3, reasoning: 3, speed: 2, pentagiRating: 3, category: "general", notes: "Purpose-built for tool use, 128K context. Will run on 8GB VRAM + 32GB RAM with significant CPU offload. Code generation is mediocre — PentAGI exploit crafting will be weak. Better for recon-only workflows." }
+      { name: "Qwen 2.5 Coder", params: "32B", paramNum: 32, quant: "Q4_K_M", ramGB: 20, vramGB: 20, contextWindow: 32768, toolCalling: 5, codeGen: 5, reasoning: 4, speed: 2, pentagiRating: 5, category: "code", notes: "Best open-source coding model. Exceptional tool use, function calling, and multi-step code generation. Ideal for PentAGI agent tasks. Requires beefy GPU." },
+      { name: "Qwen 2.5 Coder", params: "14B", paramNum: 14, quant: "Q4_K_M", ramGB: 10, vramGB: 10, contextWindow: 32768, toolCalling: 4, codeGen: 5, reasoning: 3, speed: 3, pentagiRating: 4, category: "code", notes: "Strong coding with lower resource footprint. Solid tool calling. Sweet spot for PentAGI on consumer GPUs (RTX 3080+). May struggle with complex multi-agent chains." },
+      { name: "Qwen 2.5 Coder", params: "7B", paramNum: 7, quant: "Q4_K_M", ramGB: 5, vramGB: 5, contextWindow: 32768, toolCalling: 3, codeGen: 4, reasoning: 2, speed: 4, pentagiRating: 3, category: "code", notes: "Decent coding for simple tasks. Tool calling works but unreliable on complex chains. Viable for PentAGI basic scans on low-end hardware." },
+      { name: "Qwen 2.5", params: "72B", paramNum: 72, quant: "Q4_K_M", ramGB: 44, vramGB: 44, contextWindow: 131072, toolCalling: 5, codeGen: 5, reasoning: 5, speed: 1, pentagiRating: 5, category: "general", notes: "Top-tier open model across all metrics. 128K context handles massive recon output. Requires dual GPU or high-VRAM setup (2x RTX 3090 / A100). Overkill for most PentAGI tasks but unmatched quality." },
+      { name: "Qwen 2.5", params: "32B", paramNum: 32, quant: "Q4_K_M", ramGB: 20, vramGB: 20, contextWindow: 131072, toolCalling: 5, codeGen: 4, reasoning: 4, speed: 2, pentagiRating: 5, category: "general", notes: "Excellent reasoning and tool use. Handles PentAGI's multi-agent delegation well. Fits on a single RTX 3090/4090. Strong recommendation for serious PentAGI use." },
+      { name: "Qwen 2.5", params: "14B", paramNum: 14, quant: "Q4_K_M", ramGB: 10, vramGB: 10, contextWindow: 131072, toolCalling: 4, codeGen: 3, reasoning: 3, speed: 3, pentagiRating: 4, category: "general", notes: "Good balance of capability and resource use. Tool calling reliable for standard PentAGI workflows. Fits RTX 3070+." },
+      { name: "Qwen 2.5", params: "7B", paramNum: 7, quant: "Q4_K_M", ramGB: 5, vramGB: 5, contextWindow: 131072, toolCalling: 3, codeGen: 2, reasoning: 2, speed: 4, pentagiRating: 2, category: "general", notes: "Struggles with complex agent delegation. Tool calling hit-or-miss. Only suitable for PentAGI's simplest tasks. Good for testing pipeline, not production scans." },
+      { name: "Llama 3.3", params: "70B", paramNum: 70, quant: "Q4_K_M", ramGB: 42, vramGB: 42, contextWindow: 131072, toolCalling: 4, codeGen: 4, reasoning: 5, speed: 1, pentagiRating: 4, category: "general", notes: "Meta's flagship. Excellent reasoning, good tool use. 128K context. Requires dual GPU. Slightly behind Qwen 2.5 72B on tool calling precision for PentAGI." },
+      { name: "Llama 3.1", params: "8B", paramNum: 8, quant: "Q4_K_M", ramGB: 5, vramGB: 5, contextWindow: 131072, toolCalling: 3, codeGen: 2, reasoning: 2, speed: 5, pentagiRating: 2, category: "general", notes: "Fast but limited reasoning depth. Tool calling functional but imprecise. PentAGI will produce shallow results. Good for smoke-testing the pipeline." },
+      { name: "DeepSeek Coder V2", params: "16B", paramNum: 16, quant: "Q4_K_M", ramGB: 10, vramGB: 10, contextWindow: 163840, toolCalling: 3, codeGen: 5, reasoning: 3, speed: 3, pentagiRating: 3, category: "code", notes: "Outstanding raw code generation. 160K context is largest in class. Weaker on structured tool calling — PentAGI agent orchestration may fail on complex flows. Best for code-heavy tasks only." },
+      { name: "DeepSeek R1", params: "70B", paramNum: 70, quant: "Q4_K_M", ramGB: 42, vramGB: 42, contextWindow: 131072, toolCalling: 3, codeGen: 4, reasoning: 5, speed: 1, pentagiRating: 3, category: "reasoning", notes: "Exceptional chain-of-thought reasoning. However, verbose thinking tokens slow agent loops. Tool calling format adherence is inconsistent. PentAGI may timeout waiting for responses." },
+      { name: "DeepSeek R1", params: "14B", paramNum: 14, quant: "Q4_K_M", ramGB: 9, vramGB: 9, contextWindow: 131072, toolCalling: 2, codeGen: 3, reasoning: 4, speed: 2, pentagiRating: 2, category: "reasoning", notes: "Good reasoning but tool calling is weak at this size. PentAGI agent delegation breaks frequently. Thinking tokens consume context. Not recommended for PentAGI." },
+      { name: "Mistral Nemo", params: "12B", paramNum: 12, quant: "Q4_K_M", ramGB: 8, vramGB: 8, contextWindow: 128000, toolCalling: 4, codeGen: 3, reasoning: 3, speed: 4, pentagiRating: 3, category: "general", notes: "Good instruction following and tool calling for its size. 128K context. Fast inference. Viable mid-tier PentAGI model. May miss nuanced vulnerability analysis." },
+      { name: "Mixtral", params: "8x7B", paramNum: 47, quant: "Q4_K_M", ramGB: 28, vramGB: 28, contextWindow: 32768, toolCalling: 4, codeGen: 3, reasoning: 4, speed: 2, pentagiRating: 3, category: "general", notes: "MoE architecture — only ~12B params active per token, so faster than size suggests. Decent tool calling. 32K context is a bottleneck for large nmap/recon output in PentAGI." },
+      { name: "Phi-4", params: "14B", paramNum: 14, quant: "Q4_K_M", ramGB: 9, vramGB: 9, contextWindow: 16384, toolCalling: 3, codeGen: 4, reasoning: 4, speed: 4, pentagiRating: 3, category: "general", notes: "Microsoft's latest small model. Strong reasoning for size. 16K context is a hard limit — PentAGI recon output will get truncated. Tool calling works but format adherence varies." },
+      { name: "Gemma 2", params: "27B", paramNum: 27, quant: "Q4_K_M", ramGB: 17, vramGB: 17, contextWindow: 8192, toolCalling: 2, codeGen: 3, reasoning: 4, speed: 3, pentagiRating: 2, category: "general", notes: "Good general reasoning but 8K context is severely limiting for PentAGI. Tool calling support is minimal. Not recommended — context window kills usability." },
+      { name: "Gemma 2", params: "9B", paramNum: 9, quant: "Q4_K_M", ramGB: 6, vramGB: 6, contextWindow: 8192, toolCalling: 2, codeGen: 2, reasoning: 3, speed: 5, pentagiRating: 1, category: "general", notes: "Fast but 8K context and weak tool calling make it unusable for PentAGI beyond trivial single-command tasks." },
+      { name: "Command R+", params: "104B", paramNum: 104, quant: "Q4_K_M", ramGB: 62, vramGB: 62, contextWindow: 131072, toolCalling: 5, codeGen: 3, reasoning: 4, speed: 1, pentagiRating: 4, category: "general", notes: "Cohere's flagship. Built-in RAG and tool use primitives — aligns well with PentAGI's agent architecture. 128K context. Requires enterprise GPU (A100 80GB or multi-GPU). Code gen is average." },
+      { name: "Command R", params: "35B", paramNum: 35, quant: "Q4_K_M", ramGB: 22, vramGB: 22, contextWindow: 131072, toolCalling: 4, codeGen: 3, reasoning: 3, speed: 2, pentagiRating: 3, category: "general", notes: "Good tool use, 128K context. Code generation is mediocre — PentAGI exploit crafting will be weak. Better for recon-only workflows." },
+      { name: "Codestral", params: "22B", paramNum: 22, quant: "Q4_K_M", ramGB: 14, vramGB: 14, contextWindow: 32768, toolCalling: 3, codeGen: 5, reasoning: 3, speed: 3, pentagiRating: 3, category: "code", notes: "Mistral's dedicated code model. Excellent at generating exploit scripts and tool commands. Weaker on structured agent orchestration. 32K context is adequate for most PentAGI tasks." }
     ];
 
     const ratingColors = {
@@ -480,7 +488,6 @@
     const categoryColors = { code: "#a78bfa", general: "#60a5fa", reasoning: "#f472b6" };
     const hwPresets = [
       { label: "RPi 5 (8GB)", ram: 6 },
-      { label: "GTX 1070 + 32GB", ram: 28 },
       { label: "Laptop 16GB", ram: 14 },
       { label: "RTX 3080 (10GB)", ram: 10 },
       { label: "RTX 3090 (24GB)", ram: 22 },
@@ -493,7 +500,7 @@
     let sortKey = "pentagiRating";
     let sortDir = "desc";
     let filterCat = "all";
-    let maxRam = 28;
+    let maxRam = 64;
     let minRating = 1;
     let searchQuery = "";
     let expandedKey = null;
@@ -511,7 +518,9 @@
       const container = document.getElementById("category-buttons");
       const categories = [
         { val: "all", label: "All" },
-        { val: "general", label: "General" }
+        { val: "general", label: "General" },
+        { val: "code", label: "Code" },
+        { val: "reasoning", label: "Reasoning" }
       ];
       categories.forEach(cat => {
         const btn = document.createElement("button");
@@ -667,7 +676,7 @@
                 <div class="detail-grid">
                   <div class="detail-group">
                     <div class="detail-label">Ollama Pull Command</div>
-                    <code>ollama pull ${m.ollamaTag}</code>
+                    <code>ollama pull ${m.name.toLowerCase().replace(/\s+/g, "")}:${m.params.toLowerCase()}</code>
                   </div>
                   <div class="detail-group">
                     <div class="detail-label">Quantization</div>
