@@ -100,14 +100,14 @@
       title: "Current Highlight",
       sections: [
         { type: "subtitle", content: "AI-assisted Pentesting w/ PentAGI + Ollama" },
-        { type: "desc", html: true, content: `<a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">PentAGI</a> is a fully autonomous agent system that uses LLM's to run security tests. It works using built-in tools like Nmap, Metasploit, sqlmap, search the web, maintain memory across tasks, and generates reports.
+        { type: "desc", html: true, content: `<a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">PentAGI</a> "is a fully autonomous agent that automatically determines and executes penetration testing steps." It works using built-in tools like Nmap, Metasploit, sqlmap, search the web, maintain memory across tasks, and generates reports.
 
-To save money, I used <a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a> as the local LLM inference for this project. Ollama allows me to use my own hardware to run a model instead of relying on paid API usage from Anthropic or OpenAI.
+<a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a> allows me to use my own hardware to run a LLM model instead of relying on paid API usage from Anthropic or OpenAI.
 
-I created repeatable documentation to find which Ollama model best fits for the hardware it runs on. For my system specs (32GB RAM, 8GB VRAM), I chose Qwen2.5 Coder 14B` },
+I created comparison guidance to find which Ollama model best fits for the hardware it runs on. I chose Qwen2.5 Coder 14B for my VSOC.`},
         { type: "comments",
                       html: true,
-                      content: "See the <a href=\"assets/ollama-models.html\" target=\"_blank\">Ollama Model Comparison</a> for detailed benchmarks."},
+                      content: "See the <a href=\"assets/ollama-models.html\" target=\"_blank\">Ollama Model Comparison</a> for detailed benchmarks. (AI GENERATED 4/3/26)"},
         { type: "media", src: "assets/photos/highlight.png", alt: "PentAGI Highlight" },
         { type: "desc", content: "Last Updated: 4/6/2026" }
       ]
@@ -116,8 +116,8 @@ I created repeatable documentation to find which Ollama model best fits for the 
     const ABOUT = {
       title: "About",
       sections: [
-        { type: "desc", content: `I'm a Junior Cybersecurity student at UTRGV (grad. 2027) with hands-on experience in vulnerability management, incident triage, and cloud computing. I served as an Information Security Intern at Cameron County, where I conducted vulnerability scanning with Tenable Nessus, triaged Cortex XDR alerts, developed XQL detection scripts for unauthorized RMM tools and unsecure passwords, and learned foundational language within the cybersecurity world such as CIA, AAA, HIPAA, PCI DSS, and PII. Previously worked as a Student Academic Assistant & Mentor at UTRGV, mentoring 21 students and providing guidance across programming, tooling, and environment setup.` },
-        { type: "desc", content: `Focused on incident response, email security, and vulnerability remediation. I prioritize clear documentation, reproducibility, and incremental improvement across all my work.` },
+        { type: "desc", content: `I'm a Junior Cybersecurity student at UTRGV (grad. 2027) with hands-on experience in vulnerability management, incident triage, and cloud computing. My information security internship at Cameron County taught me vulnerability scanning through Tenable Nessus, XDR alert triage, XQL threat hunting scripts, and learned foundational language within the cybersecurity world such as CIA, AAA, HIPAA, PCI DSS, and PII. Previously worked as a Student Academic Assistant & Mentor at UTRGV, mentoring 21 students and providing guidance across programming, tooling, and environment setup.` },
+        { type: "desc", content: `I prioritize clear documentation, reproducibility, and incremental improvement across all my work.` },
         { type: "desc", html: true, content: `<a href="mailto:mauriciomartinezpersonal@gmail.com">Email</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/mauricio-martinez-44a933264/" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp; <a href="https://github.com/mauricodes04" target="_blank" rel="noopener">GitHub</a>` },
         { type: "media", src: "assets/photos/about.gif", alt: "About me demo" }
       ]
@@ -132,17 +132,17 @@ I created repeatable documentation to find which Ollama model best fits for the 
         title: "Virtual SOC Lab",
         sections: [
           { type: "subtitle", content: "Azure-hosted red/blue team training environment" },
-          { type: "desc", content: `A full virtual Security Operations Center designed for student training on Azure.`},
+          { type: "desc", content: `A full virtual security operations center (VSOC) designed for student training on Azure.`},
           { type: "desc", content: `Red-team: PentAGI + Ollama AI pentesting`},
           { type: "desc", content: `Blue-team: Wazuh SIEM monitoring + Linux and windows vulnerable VMs`},
-          { type: "desc", content: `I documented how I setup this environment in Azure designed for limited Azure for Students budget ($100 credit w/ limited resources).`},
+          { type: "desc", content: `I documented how I setup this environment in Azure. (under $100 credit)`},
           { type: "comments", html: true, content: "See the <a href=\"assets/azure-setup.md\" download>azure-setup.md</a> for detailed setup instructions."},
 
           { type: "subtitle", content: "Linux target" },
           { type: "desc", content: `Running Ubuntu Server 22.04 LTS - x64 Gen2
           Size: B2als_v2`},
           { type: "media", src: "assets/photos/linux-target.png", alt: "Linux-target configuration" },
-          { type: "desc", content: "Vulnerabilities: Weak SSH credentials, Anonymous FTP login enabled, DVWA (hyperlink)" },
+          { type: "desc", html: true, content: `Vulnerabilities: Weak SSH credentials, Anonymous FTP login enabled, <a href="https://github.com/digininja/DVWA" target="_blank" rel="noopener">DVWA</a> `},
 
           { type: "subtitle", content: "Windows target" },
           { type: "desc", content: `Running Windows Server 2022 Datacenter: Azure Edition x64 Gen2 
@@ -178,10 +178,10 @@ I created repeatable documentation to find which Ollama model best fits for the 
         title: "Vulnerability Management Workshop",
         sections: [
           { type: "subtitle", content: "OpenVAS, Nmap, and hands-on exploitation demos" },
-          { type: "desc", html: true, content: `A workshop facilitated under <a href="https://vaqueroisi.org/" target="_blank" rel="noopener">VISI (Vaquero Information Security Initiative)</a> demonstrating vulnerability management tools and techniques. Covers OpenVAS/Greenbone for vulnerability scanning, Nmap for network discovery, Angry IP Scanner for host enumeration, and live demonstrations of SQL injection and path traversal attacks.` },
+          { type: "desc", html: true, content: `A workshop under <a href="https://vaqueroisi.org/" target="_blank" rel="noopener">VISI (Vaquero Information Security Initiative)</a> demonstrating vulnerability management tools and techniques. Covers OpenVAS/Greenbone for vulnerability scanning, Nmap for network discovery, Angry IP Scanner for host enumeration, and live demonstrations of SQL injection and path traversal attacks.` },
           { type: "media" },
           { type: "comments",
-                      html: true, content: "Download the OpenVAS VM <a href=\"assets/VISI.ova\" download>here</a>."}
+                      html: true, content: "Download the OpenVAS VM <a href=\"https://utrgv-my.sharepoint.com/:u:/g/personal/mauricio_martinez06_utrgv_edu/IQCVwRd2av39RrgRmhkvG3A4AU0qfXqtnuLHF4-hKLGu7Fw?e=52ViKZ\" download>here</a>."}
           
         ]
       },
@@ -189,19 +189,15 @@ I created repeatable documentation to find which Ollama model best fits for the 
         title: "OSINT Workshop & Toolkit",
         sections: [
           { type: "subtitle", content: "Comprehensive open-source intelligence framework" },
-          { type: "desc", content: "The OSINT toolkit I use and save in my browser bookmarks." },
+          { type: "desc", content: "The OSINT toolkit." },
 
-          { type: "subtitle", content: "Identity & People Lookup" },
-          { type: "desc", html: true, content: `<a href="https://whatsmyname.app/" target="_blank" rel="noopener">WhatsMyName</a> · <a href="https://www.truepeoplesearch.com/" target="_blank" rel="noopener">TruePeopleSearch</a> · <a href="https://www.familytreenow.com/" target="_blank" rel="noopener">FamilyTreeNow</a> · <a href="https://lookups.io/" target="_blank" rel="noopener">Lookups.io</a> · <a href="https://hunter.io/email-finder" target="_blank" rel="noopener">Hunter Email Finder</a> · <a href="https://jimpl.com/" target="_blank" rel="noopener">Jimpl</a> · <a href="https://phonebook.cz/" target="_blank" rel="noopener">Phonebook.cz</a> · <a href="https://facecheck.id/" target="_blank" rel="noopener">FaceCheck.ID</a> · <a href="https://pimeyes.com/en" target="_blank" rel="noopener">PimEyes</a> · <a href="https://www.nsopw.gov/search-public-sex-offender-registries" target="_blank" rel="noopener">NSOPW Registry</a>` },
+          { type: "desc", html: true, content: `Identity & People Lookup \n<a href="https://whatsmyname.app/" target="_blank" rel="noopener">WhatsMyName</a> · <a href="https://www.truepeoplesearch.com/" target="_blank" rel="noopener">TruePeopleSearch</a> · <a href="https://www.familytreenow.com/" target="_blank" rel="noopener">FamilyTreeNow</a> · <a href="https://lookups.io/" target="_blank" rel="noopener">Lookups.io</a> · <a href="https://hunter.io/email-finder" target="_blank" rel="noopener">Hunter Email Finder</a> · <a href="https://jimpl.com/" target="_blank" rel="noopener">Jimpl</a> · <a href="https://phonebook.cz/" target="_blank" rel="noopener">Phonebook.cz</a> · <a href="https://facecheck.id/" target="_blank" rel="noopener">FaceCheck.ID</a> · <a href="https://pimeyes.com/en" target="_blank" rel="noopener">PimEyes</a> · <a href="https://www.nsopw.gov/search-public-sex-offender-registries" target="_blank" rel="noopener">NSOPW Registry</a>` },
 
-          { type: "subtitle", content: "Breach, Threat & Malware Intelligence" },
-          { type: "desc", html: true, content: `<a href="https://haveibeenpwned.com/" target="_blank" rel="noopener">Have I Been Pwned</a> · <a href="https://intelx.io/" target="_blank" rel="noopener">Intelligence X</a> · <a href="https://intelligencesecurity.io/en/" target="_blank" rel="noopener">Intelligence Security</a> · <a href="https://www.shodan.io/" target="_blank" rel="noopener">Shodan</a> · <a href="https://www.virustotal.com/gui/home/upload" target="_blank" rel="noopener">VirusTotal</a> · <a href="https://hybrid-analysis.com/" target="_blank" rel="noopener">Hybrid Analysis</a> · <a href="https://any.run/" target="_blank" rel="noopener">ANY.RUN</a> · <a href="https://metadefender.com/" target="_blank" rel="noopener">MetaDefender</a> · <a href="https://dnsdumpster.com/" target="_blank" rel="noopener">DNSDumpster</a> · <a href="https://app.phishtool.com/sign-up/community" target="_blank" rel="noopener">PhishTool Community</a> · <a href="https://odcrawler.xyz/" target="_blank" rel="noopener">ODCrawler</a> · <a href="https://www.dorkgpt.com/" target="_blank" rel="noopener">DorkGPT</a> · <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener">CyberChef</a>` },
+          { type: "desc", html: true, content: `Breach, Threat & Malware Intelligence\n<a href="https://haveibeenpwned.com/" target="_blank" rel="noopener">Have I Been Pwned</a> · <a href="https://intelx.io/" target="_blank" rel="noopener">Intelligence X</a> · <a href="https://intelligencesecurity.io/en/" target="_blank" rel="noopener">Intelligence Security</a> · <a href="https://www.shodan.io/" target="_blank" rel="noopener">Shodan</a> · <a href="https://www.virustotal.com/gui/home/upload" target="_blank" rel="noopener">VirusTotal</a> · <a href="https://hybrid-analysis.com/" target="_blank" rel="noopener">Hybrid Analysis</a> · <a href="https://any.run/" target="_blank" rel="noopener">ANY.RUN</a> · <a href="https://metadefender.com/" target="_blank" rel="noopener">MetaDefender</a> · <a href="https://dnsdumpster.com/" target="_blank" rel="noopener">DNSDumpster</a> · <a href="https://app.phishtool.com/sign-up/community" target="_blank" rel="noopener">PhishTool Community</a> · <a href="https://odcrawler.xyz/" target="_blank" rel="noopener">ODCrawler</a> · <a href="https://www.dorkgpt.com/" target="_blank" rel="noopener">DorkGPT</a> · <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener">CyberChef</a>` },
 
-          { type: "subtitle", content: "Geospatial, Transport & Surveillance" },
-          { type: "desc", html: true, content: `<a href="https://www.atlasofsurveillance.org/" target="_blank" rel="noopener">Atlas of Surveillance</a> · <a href="https://deflock.org/map#map=13/25.993461/-97.509499" target="_blank" rel="noopener">DeFlock Map</a> · <a href="https://cctv.masspirates.org/" target="_blank" rel="noopener">MassPirates CCTV Map</a> · <a href="https://www.openrailwaymap.org/index.php" target="_blank" rel="noopener">OpenRailwayMap</a> · <a href="https://www.marinetraffic.com/en/ais/home/centerx:-97.191/centery:26.063/zoom:12" target="_blank" rel="noopener">MarineTraffic</a> · <a href="https://globe.adsbexchange.com/" target="_blank" rel="noopener">ADS-B Exchange</a> · <a href="https://map.netronline.com/" target="_blank" rel="noopener">NETRonline Map</a> · <a href="https://www.faxvin.com/" target="_blank" rel="noopener">FAXVIN</a> · <a href="https://www.carfax.com/vehicle-history-reports/" target="_blank" rel="noopener">CARFAX</a> · <a href="https://wigle.net/#/" target="_blank" rel="noopener">WiGLE</a>` },
+          { type: "desc", html: true, content: `Geospatial, Transport & Surveillance\n<a href="https://www.atlasofsurveillance.org/" target="_blank" rel="noopener">Atlas of Surveillance</a> · <a href="https://deflock.org/map#map=13/25.993461/-97.509499" target="_blank" rel="noopener">DeFlock Map</a> · <a href="https://cctv.masspirates.org/" target="_blank" rel="noopener">MassPirates CCTV Map</a> · <a href="https://www.openrailwaymap.org/index.php" target="_blank" rel="noopener">OpenRailwayMap</a> · <a href="https://www.marinetraffic.com/en/ais/home/centerx:-97.191/centery:26.063/zoom:12" target="_blank" rel="noopener">MarineTraffic</a> · <a href="https://globe.adsbexchange.com/" target="_blank" rel="noopener">ADS-B Exchange</a> · <a href="https://map.netronline.com/" target="_blank" rel="noopener">NETRonline Map</a> · <a href="https://www.faxvin.com/" target="_blank" rel="noopener">FAXVIN</a> · <a href="https://www.carfax.com/vehicle-history-reports/" target="_blank" rel="noopener">CARFAX</a> · <a href="https://wigle.net/#/" target="_blank" rel="noopener">WiGLE</a>` },
 
-          { type: "subtitle", content: "Frameworks, References & Workflow" },
-          { type: "desc", html: true, content: `<a href="https://osintframework.com/" target="_blank" rel="noopener">OSINT Framework</a> · <a href="https://docs.google.com/spreadsheets/d/1KGLi0unSMHpGH1wZBrJ21-ryWqgruksSFNZIrDn5giY/edit?gid=132235969#gid=132235969" target="_blank" rel="noopener">OSINT Reference Sheet</a> · <a href="https://hackviser.com/" target="_blank" rel="noopener">Hackviser</a>` }
+          { type: "desc", html: true, content: `Frameworks, References & Workflow\n<a href="https://osintframework.com/" target="_blank" rel="noopener">OSINT Framework</a> · <a href="https://docs.google.com/spreadsheets/d/1KGLi0unSMHpGH1wZBrJ21-ryWqgruksSFNZIrDn5giY/edit?gid=132235969#gid=132235969" target="_blank" rel="noopener">OSINT Reference Sheet</a> · <a href="https://hackviser.com/" target="_blank" rel="noopener">Hackviser</a>` }
         ]
       }
     ];
