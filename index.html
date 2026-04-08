@@ -54,7 +54,21 @@
         <nav class="topbar-header__nav">
           <button class="topbar__nav-link active" data-tb-section="highlight">Highlight</button>
           <button class="topbar__nav-link" data-tb-section="about">About</button>
-          <a class="topbar__nav-link topbar__nav-link--resume" href="Mauricio_Resume.pdf" target="_blank" rel="noopener">Download Resume</a>
+          <div class="topbar__resume-dropdown">
+            <button
+              class="topbar__nav-link topbar__nav-link--resume topbar__resume-toggle"
+              id="resume-toggle"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Download Resume/CV
+            </button>
+            <div class="topbar__resume-menu" id="resume-menu" role="menu" aria-labelledby="resume-toggle">
+              <a class="topbar__resume-menu-link" href="Mauricio_Resume.pdf" download role="menuitem">Resume (PDF)</a>
+              <a class="topbar__resume-menu-link" href="Mauricio_Martinez_CV.md" download role="menuitem">CV (Markdown)</a>
+            </div>
+          </div>
         </nav>
 
         <!-- Row 3: Project buttons (always visible) -->
@@ -395,6 +409,44 @@ I created comparison guidance to find which Ollama model best fits for the hardw
         showSection(section);
       });
     });
+
+    /* ==============================================================
+       RESUME/CV DROPDOWN HANDLERS
+       ============================================================== */
+    const resumeDropdown = document.querySelector(".topbar__resume-dropdown");
+    const resumeToggle = document.getElementById("resume-toggle");
+
+    function closeResumeDropdown() {
+      if (!resumeDropdown || !resumeToggle) return;
+      resumeDropdown.classList.remove("open");
+      resumeToggle.setAttribute("aria-expanded", "false");
+    }
+
+    if (resumeDropdown && resumeToggle) {
+      resumeToggle.addEventListener("click", () => {
+        const willOpen = !resumeDropdown.classList.contains("open");
+        resumeDropdown.classList.toggle("open", willOpen);
+        resumeToggle.setAttribute("aria-expanded", String(willOpen));
+      });
+
+      document.addEventListener("click", event => {
+        if (!resumeDropdown.contains(event.target)) {
+          closeResumeDropdown();
+        }
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          closeResumeDropdown();
+        }
+      });
+
+      resumeDropdown.querySelectorAll(".topbar__resume-menu-link").forEach(link => {
+        link.addEventListener("click", () => {
+          closeResumeDropdown();
+        });
+      });
+    }
 
     /* ==============================================================
        SHOW SECTION — show projects or about
