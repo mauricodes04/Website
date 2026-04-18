@@ -113,17 +113,13 @@
     const HIGHLIGHT = {
       title: "Current Highlight",
       sections: [
-        { type: "subtitle", content: "AI-assisted Pentesting w/ PentAGI + Ollama" },
-        { type: "desc", html: true, content: `<a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">PentAGI</a> "is a fully autonomous agent that automatically determines and executes penetration testing steps." It works using built-in tools like Nmap, Metasploit, sqlmap, search the web, maintain memory across tasks, and generates reports.
+        { type: "subtitle", content: "/career-ops + JobSpy" },
+        { type: "desc", html: true, content: `<a href="https://github.com/santifer/career-ops" target="_blank" rel="noopener">career-ops</a> is an AI-powered job application pipeline I'm contributing to. It pulls listings from two sources: <a href="https://github.com/speedyapply/JobSpy" target="_blank" rel="noopener">JobSpy</a>, which scrapes boards like LinkedIn and Indeed, and a growing library of direct ATS API integrations (Greenhouse, Lever, Ashby, Workday, and others) that contributors are developing to cover 30,000+ company career portals. The pipeline evaluates each listing against my profile and target roles, generates tailored CVs and cover letters, and produces employer research summaries.
 
-<a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a> allows me to use my own hardware to run a LLM model instead of relying on paid API usage from Anthropic or OpenAI.
-
-I created comparison guidance to find which Ollama model best fits for the hardware it runs on. As of now, I'm unable to select a model because I lack the hardware to run it. I can request a quota increase for my Azure for Students subscription or find a way to get hands on a lab computer.`},
-        { type: "comments",
-                      html: true,
-                      content: "See the <a href=\"assets/ollama-models.html\" target=\"_blank\">Ollama Model Comparison</a> for detailed benchmarks. (AI GENERATED 4/3/26)"},
-        { type: "media", src: "assets/photos/highlight.png", alt: "PentAGI Highlight" },
-        { type: "desc", content: "Last Updated: 4/6/2026" }
+So far, I've been searching for internships and full-time positions and applying manually. The goal is to increase interview conversion by submitting role-specific application materials at scale.`},
+        
+        { type: "media", src: "assets/photos/demo.gif", alt: "Career-ops demo" },
+        { type: "desc", content: "Last Updated: 4/18/2026" }
       ]
     };
 
@@ -145,6 +141,7 @@ I created comparison guidance to find which Ollama model best fits for the hardw
       {
         title: "Virtual SOC Lab",
         sections: [
+          //  Azure VSOC
           { type: "subtitle", content: "Azure-hosted red/blue team training environment" },
           { type: "desc", content: `A full virtual security operations center (VSOC) designed for student training on Azure.`},
           { type: "desc", content: `Red-team: PentAGI + Ollama AI pentesting`},
@@ -163,6 +160,18 @@ I created comparison guidance to find which Ollama model best fits for the hardw
           Size: B2as_v2`},
           { type: "media", src: "assets/photos/windows-target.png", alt: "Windows-target configuration" },
           { type: "desc", content: "Vulnerabilities: Weak RDP credentials, Open file sharing SMB, Disabled Firewall" },
+          // PentAGI + Ollama
+          { type: "subtitle", content: "AI-assisted Pentesting w/ PentAGI + Ollama" },
+          { type: "media", src: "assets/photos/highlight.png", alt: "PentAGI Highlight" },
+          { type: "desc", html: true, content: `<a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">PentAGI</a> "is a fully autonomous agent that automatically determines and executes penetration testing steps." It works using built-in tools like Nmap, Metasploit, sqlmap, search the web, maintain memory across tasks, and generates reports.
+
+<a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a> allows me to use my own hardware to run a LLM model instead of relying on paid API usage from Anthropic or OpenAI.
+
+I created comparison guidance to find which Ollama model best fits for the hardware it runs on. As of now, I'm unable to select a model because I lack the hardware to run it. I can request a quota increase for my Azure for Students subscription or find a way to get hands on a lab computer.`},
+          { type: "comments",
+                      html: true,
+                      content: "See the <a href=\"assets/ollama-models.html\" target=\"_blank\">Ollama Model Comparison</a> for detailed benchmarks. (AI GENERATED 4/3/26)"},
+          { type: "desc", content: "Last Updated: 4/18/2026" }
         ]
       },
 
