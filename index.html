@@ -113,13 +113,27 @@
     const HIGHLIGHT = {
       title: "Current Highlight",
       sections: [
-        { type: "subtitle", content: "/career-ops + JobSpy" },
-        { type: "desc", html: true, content: `<a href="https://github.com/santifer/career-ops" target="_blank" rel="noopener">career-ops</a> is an AI-powered job application pipeline I'm contributing to. It pulls listings from two sources: <a href="https://github.com/speedyapply/JobSpy" target="_blank" rel="noopener">JobSpy</a>, which scrapes boards like LinkedIn and Indeed, and a growing library of direct ATS API integrations (Greenhouse, Lever, Ashby, Workday, and others) that contributors are developing to cover 30,000+ company career portals. The pipeline evaluates each listing against my profile and target roles, generates tailored CVs and cover letters, and produces employer research summaries.
+        { type: "subtitle", content: "banadi" },
+        { type: "desc", html: true, content: `AI-powered pentesting pipeline built on Claude Code.`},
 
-So far, I've been searching for internships and full-time positions and applying manually. The goal is to increase interview conversion by submitting role-specific application materials at scale.`},
-        
-        { type: "media", src: "assets/photos/demo.gif", alt: "Career-ops demo" },
-        { type: "desc", content: "Last Updated: 4/18/2026" }
+        { type: "desc", html: true, content: `After recognizing LLM tools through pentagi and claude code orchestration through career-ops, I created banadi. This will probably be my capstone project or used for admissions.`},
+
+        { type: "media", src: "assets/photos/about.gif", alt: "Career-ops demo" },
+
+        { type: "subtitle", content: "/banadi" },
+        { type: "desc", html: true, content: `Displays list of available commands.`},
+        { type: "subtitle", content: "/banadi-doctor" },
+        { type: "desc", html: true, content: `Verifies Docker container, MCP servers, and LLM reachability are green.`},
+        { type: "subtitle", content: "/banadi-scope" },
+        { type: "desc", html: true, content: `Prints current list of available targets in config/scope.yml`},
+        { type: "subtitle", content: "/banadi-recon <target>" },
+        { type: "desc", html: true, content: `Runs an nmap scan on the target in the docker container. Logs ports, OS estimate, and transcript.`},
+        { type: "subtitle", content: "/banadi-vuln" },
+        { type: "desc", html: true, content: `Sources <a href="https://hackviser.com/" target="_blank" rel="noopener">hackviser.com</a> for pentesting information/guidance per port.`},
+        { type: "subtitle", content: "/banadi-cve" },
+        { type: "desc", html: true, content: `Uses LLM reasoning/history to identify CVE ID for version banner and port service. Uses NVD REST API to capture information and further guidance.`},
+
+        { type: "desc", content: "Last Updated: 4/30/2026" }
       ]
     };
 
@@ -141,6 +155,17 @@ So far, I've been searching for internships and full-time positions and applying
       {
         title: "Virtual SOC Lab",
         sections: [
+          // PentAGI + Ollama
+          { type: "subtitle", content: "AI-assisted Pentesting w/ PentAGI + Ollama" },
+          { type: "media", src: "assets/photos/highlight.png", alt: "PentAGI Highlight" },
+          { type: "desc", html: true, content: `<a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">PentAGI</a> "is a fully autonomous agent that automatically determines and executes penetration testing steps." It works using built-in tools like Nmap, Metasploit, sqlmap, search the web, maintain memory across tasks, and generates reports.
+
+<a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a> allows me to use my own hardware to run a LLM model instead of relying on paid API usage from Anthropic or OpenAI.
+
+I created comparison guidance to find which Ollama model best fits for the hardware it runs on. As of now, I'm unable to select a model because I lack the hardware to run it. I can request a quota increase for my Azure for Students subscription or find a way to get hands on a lab computer.`},
+          { type: "comments",
+                      html: true,
+                      content: "See the <a href=\"assets/ollama-models.html\" target=\"_blank\">Ollama Model Comparison</a> for detailed benchmarks. (AI GENERATED 4/3/26)"},
           //  Azure VSOC
           { type: "subtitle", content: "Azure-hosted red/blue team training environment" },
           { type: "desc", content: `A full virtual security operations center (VSOC) designed for student training on Azure.`},
@@ -160,24 +185,20 @@ So far, I've been searching for internships and full-time positions and applying
           Size: B2as_v2`},
           { type: "media", src: "assets/photos/windows-target.png", alt: "Windows-target configuration" },
           { type: "desc", content: "Vulnerabilities: Weak RDP credentials, Open file sharing SMB, Disabled Firewall" },
-          // PentAGI + Ollama
-          { type: "subtitle", content: "AI-assisted Pentesting w/ PentAGI + Ollama" },
-          { type: "media", src: "assets/photos/highlight.png", alt: "PentAGI Highlight" },
-          { type: "desc", html: true, content: `<a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">PentAGI</a> "is a fully autonomous agent that automatically determines and executes penetration testing steps." It works using built-in tools like Nmap, Metasploit, sqlmap, search the web, maintain memory across tasks, and generates reports.
-
-<a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a> allows me to use my own hardware to run a LLM model instead of relying on paid API usage from Anthropic or OpenAI.
-
-I created comparison guidance to find which Ollama model best fits for the hardware it runs on. As of now, I'm unable to select a model because I lack the hardware to run it. I can request a quota increase for my Azure for Students subscription or find a way to get hands on a lab computer.`},
-          { type: "comments",
-                      html: true,
-                      content: "See the <a href=\"assets/ollama-models.html\" target=\"_blank\">Ollama Model Comparison</a> for detailed benchmarks. (AI GENERATED 4/3/26)"},
-          { type: "desc", content: "Last Updated: 4/18/2026" }
+          
+          { type: "desc", content: "Last Updated: 4/30/2026" }
         ]
       },
 
       {
         title: "tools",
         sections: [
+          { type: "subtitle", content: "/career-ops + JobSpy" },
+        { type: "desc", html: true, content: `<a href="https://github.com/santifer/career-ops" target="_blank" rel="noopener">career-ops</a> is an AI-powered job application pipeline I'm contributing to. It pulls listings from a growing library of direct ATS API integrations (Greenhouse, Lever, Ashby, Workday, and others). <a href="https://github.com/speedyapply/JobSpy" target="_blank" rel="noopener">JobSpy</a> scrapes boards like LinkedIn and Indeed. The pipeline evaluates each listing against my profile and target roles, generates tailored CVs and cover letters, and produces employer research summaries.
+
+So far, I've been searching for internships and full-time positions and applying manually. The goal is to increase interview conversion by submitting role-specific application materials at scale.`},
+        
+        { type: "media", src: "assets/photos/demo.gif", alt: "Career-ops demo" },
           { type: "subtitle", content: "Portable python utilities" },
           { type: "desc", html: true, content: `My collection of portable programs I use for my day-to-day work.\n<a href="https://github.com/mauricodes04/tools" target="_blank" rel="noopener">Github Repo</a> `},
           { type: "subtitle", content: "Typer" },
@@ -195,6 +216,8 @@ I created comparison guidance to find which Ollama model best fits for the hardw
           { type: "subtitle", content: "Rockyou" },
           { type: "desc", content: `Record keyboard/mouse actions and replay with password list`},
           { type: "media", src: "assets/photos/rockyou.gif", alt: "Rockyou demo" },
+          
+        { type: "desc", content: "Last Updated: 4/30/2026" }
         ]
       },
       {
