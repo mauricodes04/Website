@@ -69,67 +69,10 @@ a {
 a:hover { text-decoration: underline; }
 
 /* ================================================================
-   SPLASH SCREEN — Mode selection
-   Full-viewport overlay with two clickable cards.
-   ================================================================ */
-#splash {
-  position: fixed; inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 60px;
-  background: #0b1120;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-#splash.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.mode-card {
-  width: 280px;
-  height: 180px;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  border: none;
-  font-family: inherit;
-}
-.mode-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-}
-
-/* Light mode card */
-.mode-card--light {
-  background: #f0f0f0;
-  color: #1a1f36;
-}
-/* Dark mode card */
-.mode-card--dark {
-  background: #2a3352;
-  color: #ffffff;
-  border: 1px solid #3a4565;
-}
-
-/* ================================================================
    LAYOUT: APP
    ================================================================ */
 #app {
-  display: none;            /* shown after splash dismissal */
   min-height: 100vh;
-}
-#app.visible {
-  display: block;
 }
 
 /* ================================================================
@@ -395,17 +338,6 @@ div.detail__media {
   font-size: 14px;
 }
 
-.detail__extra {
-  font-size: 14px;
-  color: #e8e8e8;
-  line-height: 1.75;
-  max-width: 680px;
-  margin-bottom: 16px;
-}
-[data-theme="light"] .detail__extra {
-  color: var(--text-primary);
-}
-
 .detail__link {
   color: var(--teal);
   font-size: 14px;
@@ -455,48 +387,6 @@ div.detail__media {
   padding: 12px;
   border-top: 1px solid var(--accent);
   background: #1a2a3e;
-}
-
-/* --- About Section --- */
-.about__heading {
-  font-size: 25px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.about__rule {
-  width: 420px;
-  max-width: 100%;
-  height: 3px;
-  background: var(--accent);
-  border-radius: 2px;
-  margin-bottom: 20px;
-  transition: background var(--transition);
-}
-
-.about__text {
-  font-size: 14px;
-  color: #e8e8e8;
-  line-height: 1.8;
-  max-width: 720px;
-  margin-bottom: 20px;
-}
-[data-theme="light"] .about__text {
-  color: var(--text-primary);
-}
-
-.about__media {
-  width: 100%;
-  max-width: 520px;
-  height: 220px;
-  border: 2px dashed var(--text-muted);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 14px;
-  margin: 0 auto 28px;
 }
 
 /* ================================================================
