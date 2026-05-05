@@ -7,7 +7,7 @@ const HIGHLIGHT = {
     { type: "subtitle", content: "banadi" },
     { type: "desc", html: true, content: `AI-powered pentesting pipeline built on Claude Code.`},
 
-    { type: "desc", html: true, content: `After recognizing LLM tools through pentagi and claude code orchestration through career-ops, I created banadi. This will probably be my capstone project or used for admissions.`},
+    { type: "desc", html: true, content: `After recognizing LLM tools through <a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">pentagi</a> and claude code orchestration through <a href="https://github.com/santifer/career-ops" target="_blank" rel="noopener">career-ops</a>, I created banadi. This will probably be my capstone project or used for admissions.`},
 
     { type: "media", src: "assets/photos/about.gif", alt: "Career-ops demo" },
 
