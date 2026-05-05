@@ -28,8 +28,13 @@ const HIGHLIGHT = {
     { type: "subtitle", content: "/banadi-cve" },
     { type: "desc", html: true, content: `Uses LLM reasoning/history to identify CVE ID for version banner and port service. Uses NVD REST API to capture information and further guidance.`},
     { type: "media", src: "assets/photos/banadi-cve.png", alt: "banadi-cve demo" },
+    { type: "subtitle", content: "/banadi-patch" },
+    { type: "desc", html: true, content: `Triages a Window host's installed program inventory. Uses LLM reasoning/history to identify CVE ID, malware, remote-access concerns and generates a report.md using template.`},
+    { type: "media", src: "assets/photos/banadi-patch.png", alt: "banadi-patch demo" },
+    { type: "comments", html: false, content: "results.md template. Results vary."},
 
-    { type: "desc", content: "Last Updated: 4/30/2026" }
+
+    { type: "desc", content: "Last Updated: 5/5/2026" }
   ]
 };
 
