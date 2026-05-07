@@ -5,9 +5,9 @@ const HIGHLIGHT = {
   title: "Current Highlight",
   sections: [
     { type: "subtitle", content: "banadi" },
-    { type: "desc", html: true, content: `AI-powered pentesting pipeline built on Claude Code.`},
+    { type: "desc", html: true, content: `AI-powered pentesting and vulnerability triage framework.`},
 
-    { type: "desc", html: true, content: `After recognizing LLM tools through <a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">pentagi</a> and claude code orchestration through <a href="https://github.com/santifer/career-ops" target="_blank" rel="noopener">career-ops</a>, I created banadi. This will probably be my capstone project or used for admissions.`},
+    { type: "desc", html: true, content: `After recognizing LLM tooling through <a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">pentagi</a> and Claude Code orchestration through <a href="https://github.com/santifer/career-ops" target="_blank" rel="noopener">career-ops</a>, I created banadi. Banadi combines Claude Code, Dockerized security tooling, CVE intelligence, and LLM-assisted analysis into a modular offensive security workflow. This will probably be my capstone project or used for admissions.`},
 
     { type: "media", src: "assets/photos/about.gif", alt: "Career-ops demo" },
 
@@ -25,6 +25,7 @@ const HIGHLIGHT = {
     { type: "subtitle", content: "/banadi-vuln" },
     { type: "desc", html: true, content: `Sources <a href="https://hackviser.com/" target="_blank" rel="noopener">hackviser.com</a> for pentesting information/guidance per port.`},
     { type: "media", src: "assets/photos/banadi-vuln.png", alt: "banadi-vuln demo" },
+    { type: "comments", html: true, content: `See <a href="https://hackviser.com/tactics/pentesting/services/ssh" target="_blank" rel="noopener">hackviser's document on port 22 (SSH)</a>`},
     { type: "subtitle", content: "/banadi-cve" },
     { type: "desc", html: true, content: `Uses LLM reasoning/history to identify CVE ID for version banner and port service. Uses NVD REST API to capture information and further guidance.`},
     { type: "media", src: "assets/photos/banadi-cve.png", alt: "banadi-cve demo" },
@@ -58,7 +59,7 @@ const PROJECTS = [
     sections: [
       { type: "subtitle", content: "AI-assisted Pentesting w/ PentAGI + Ollama" },
       { type: "media", src: "assets/photos/highlight.png", alt: "PentAGI Highlight" },
-      { type: "desc", html: true, content: `<a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">PentAGI</a> "is a fully autonomous agent that automatically determines and executes penetration testing steps." It works using built-in tools like Nmap, Metasploit, sqlmap, search the web, maintain memory across tasks, and generates reports.
+      { type: "desc", html: true, content: `<a href="https://github.com/vxcontrol/pentagi" target="_blank" rel="noopener">PentAGI</a> is a fully autonomous agent that automatically determines and executes penetration testing steps. It works using built-in tools like Nmap, Metasploit, sqlmap, search the web, maintain memory across tasks, and generates reports.
 
 <a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a> allows me to use my own hardware to run a LLM model instead of relying on paid API usage from Anthropic or OpenAI.
 
@@ -92,7 +93,8 @@ I created comparison guidance to find which Ollama model best fits for the hardw
     title: "tools",
     sections: [
       { type: "subtitle", content: "/career-ops + JobSpy" },
-      { type: "desc", html: true, content: `<a href="https://github.com/santifer/career-ops" target="_blank" rel="noopener">career-ops</a> is an AI-powered job application pipeline I'm contributing to. It pulls listings from a growing library of direct ATS API integrations (Greenhouse, Lever, Ashby, Workday, and others). <a href="https://github.com/speedyapply/JobSpy" target="_blank" rel="noopener">JobSpy</a> scrapes boards like LinkedIn and Indeed. The pipeline evaluates each listing against my profile and target roles, generates tailored CVs and cover letters, and produces employer research summaries.
+      { type: "desc", html: true, content: `<a href="https://github.com/santifer/career-ops" target="_blank" rel="noopener">career-ops</a> is an AI-powered job application pipeline I'm contributing to by adding JobSpy. It pulls listings from a growing library of direct ATS API integrations (Greenhouse, Lever, Ashby, Workday, and others). 
+<a href="https://github.com/speedyapply/JobSpy" target="_blank" rel="noopener">JobSpy</a> scrapes boards like LinkedIn and Indeed. The pipeline evaluates each listing against my profile and target roles, generates tailored CVs and cover letters, and produces employer research summaries.
 
 So far, I've been searching for internships and full-time positions and applying manually. The goal is to increase interview conversion by submitting role-specific application materials at scale.`},
 

@@ -383,10 +383,9 @@
       <span class="subtitle">× pentagi compatibility</span>
     </div>
     <p class="description">
-      Filtered to models with the native <code style="display:inline;padding:1px 6px;background:rgba(163,230,53,0.1);color:#a3e635;border:none">tools</code> capability in Ollama's registry — required by PentAGI's startup probe.
-      Models without it (qwen2.5-coder, deepseek-coder-v2, deepseek-r1, phi4, gemma2, codestral) fail flow creation with
+      Filtered to models with the native <code style="display:inline;padding:1px 6px;background:rgba(163,230,53,0.1);color:#a3e635;border:none">tools</code> capability.
+      Models without it (qwen2.5-coder, deepseek-coder-v2, deepseek-r1, phi4, gemma2, codestral) fail flow creation with the error
       <code style="display:inline;padding:1px 6px;background:rgba(239,68,68,0.1);color:#ef4444;border:none">no tool call ID samples collected</code>.
-      RAM estimates at Q4_K_M. VRAM ≈ RAM for full GPU offload. CPU spillover adds ~3–5× latency.
     </p>
   </div>
 
