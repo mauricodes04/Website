@@ -1,91 +1,289 @@
-<!doctype html>
-<html lang="en" data-theme="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mauricio Martinez</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mauricio Martinez | Cybersecurity</title>
 
-  <!-- ======================== FONTS ======================== -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary:    #1c1917; /* Greyish */
+    --bg-card:       #292524; /* Boxes */
+    --text-primary:  #fafaf9; /* Title, Links, Experience titles*/
+    --text-secondary:#d6d3d1; /* Experience descriptions */
+    --text-muted:    #78716c;
+    --border-subtle: #44403c; 
+    --teal:          #e7e5e4;
+    --accent:        #a8a29e;
+  }
+  body { font-family: 'Inter', sans-serif; }
 
-  <!-- ======================== STYLES ======================== -->
-  <link rel="stylesheet" href="assets/css/styles.css">
+  /* ================================================================
+     RESET & BASE
+     ================================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  a { color: var(--teal); text-decoration: none; transition: 0.15s; }
+  a:hover { text-decoration: underline; }
+
+  /* ================================================================
+     LAYOUT
+     ================================================================ */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 80px 24px 120px;
+  }
+
+  /* --- Header --- */
+  .header { margin-bottom: 64px; }
+  
+  .header h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  
+  .header .tagline {
+    font-size: 14px;
+    color: var(--teal);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .header .bio {
+    color: var(--text-secondary);
+    font-size: 15px;
+    max-width: 540px;
+    margin-bottom: 24px;
+  }
+  
+  .links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .links a {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 2px;
+    font-weight: 600;
+  }
+  
+  .links a:hover {
+    color: var(--teal);
+    border-color: var(--teal);
+    text-decoration: none;
+  }
+
+  /* --- Sections --- */
+  section { margin-bottom: 56px; }
+  
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-weight: 600;
+  }
+
+  /* --- Publications / Projects --- */
+  .pub {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  
+  .pub:last-child { border-bottom: none; }
+  
+  .pub-title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  
+  .pub-venue {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    background: var(--bg-card);
+    color: var(--teal);
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-subtle);
+    font-weight: 600;
+  }
+  
+  .pub-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* --- Experience Lists --- */
+  .exp {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 8px 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    align-items: start;
+  }
+  
+  .exp:last-child { border-bottom: none; }
+  
+  .exp-date {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding-top: 2px;
+    font-weight: 600;
+  }
+  
+  .exp-role {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+  }
+  
+  .exp-place-and-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* --- Footer --- */
+  .footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 480px) {
+    .header h1 { font-size: 32px; }
+    .exp { grid-template-columns: 1fr; gap: 6px; }
+    .exp-date { font-size: 12px; }
+  }
+</style>
 </head>
 <body>
+<div class="container">
 
-  <!-- ============================================================
-       MAIN APP
-       ============================================================ -->
-  <div id="app">
+  <header class="header">
+    <p class="tagline">UTRGV · Security Engineer</p>
+    <h1>Mauricio Martinez</h1>
+    <p class="bio">
+      Hands-on experience in vulnerability management, incident triage, and cloud computing. I like playing music, games, and look forward to becoming a homeowner and beekeeper.
+    </p>
+    <div class="links">
+      <a href="mailto:mauriciomartinezpersonal@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/mauricio-martinez-44a933264/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/mauricodes04" target="_blank">GitHub</a>
+      <a href="Mauricio_Resume.pdf" target="_blank">Resume/CV</a>
+    </div>
+  </header>
 
-    <div id="topbar-layout">
+  <section>
+    <p class="section-label">Experience</p>
 
-      <!-- Sticky header: name row, nav row, project buttons row -->
-      <header class="topbar-header">
-
-        <!-- Row 1: Name (clickable → home) + Toggle + Subtitle -->
-        <div class="topbar-header__row1">
-          <div class="topbar__name-row">
-            <span class="topbar__name" onclick="goHome()" role="button" tabindex="0">Mauricio Martinez</span>
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" id="topbar-toggle">&#9790;</button>
-          </div>
-          <span class="topbar__subtitle">Aspiring SOC engineer</span>
-        </div>
-
-        <!-- Row 2: Navigation -->
-        <nav class="topbar-header__nav">
-          <button class="topbar__nav-link active" data-tb-section="highlight">Highlight</button>
-          <button class="topbar__nav-link" data-tb-section="about">About</button>
-          <div class="topbar__resume-dropdown">
-            <button
-              class="topbar__nav-link topbar__nav-link--resume topbar__resume-toggle"
-              id="resume-toggle"
-              type="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Download Resume/CV
-            </button>
-            <div class="topbar__resume-menu" id="resume-menu" role="menu" aria-labelledby="resume-toggle">
-              <a class="topbar__resume-menu-link" href="Mauricio_Resume.pdf" download role="menuitem">Resume (PDF)</a>
-              <a class="topbar__resume-menu-link" href="Mauricio_Martinez_CV.md" download role="menuitem">CV (Markdown)</a>
-            </div>
-          </div>
-        </nav>
-
-        <!-- Row 3: Project buttons -->
-        <div class="topbar-header__projects">
-          <button class="topbar-proj-btn topbar-proj-btn--1 active" onclick="switchProject(0)">VSOC</button>
-          <button class="topbar-proj-btn topbar-proj-btn--2" onclick="switchProject(1)">Tools</button>
-          <button class="topbar-proj-btn topbar-proj-btn--3" onclick="switchProject(2)">Vuln Mgmt</button>
-          <button class="topbar-proj-btn topbar-proj-btn--4" onclick="switchProject(3)">OSINT</button>
-        </div>
-      </header>
-
-      <!-- Scrollable content area -->
-      <div class="topbar-content">
-
-        <div id="topbar-highlight" class="fade-in">
-          <div id="highlight-content"></div>
-        </div>
-
-        <div id="topbar-project-detail" class="fade-in" style="display:none;">
-          <div id="proj-content"></div>
-        </div>
-
-        <div id="topbar-about" class="fade-in" style="display:none;">
-          <div id="about-content"></div>
-        </div>
-
+    <div class="exp">
+      <span class="exp-date">Student Role</span>
+      <div>
+        <div class="exp-role">Student Analyst</div>
+        <div class="exp-place-and-description">UTRGV RSOC</div>
       </div>
     </div>
 
-  </div>
+    <div class="exp">
+      <span class="exp-date">Internship</span>
+      <div>
+        <div class="exp-role">Information Security Intern</div>
+        <div class="exp-place-and-description">Cameron County — Tenable Nessus scanning, XDR alert triage, XQL threat hunting</div>
+      </div>
+    </div>
 
-  <!-- ======================== SCRIPTS ======================== -->
-  <script src="assets/js/data.js"></script>
-  <script src="assets/js/main.js"></script>
+    <div class="exp">
+      <span class="exp-date">Student Role</span>
+      <div>
+        <div class="exp-role">Academic Assistant & Mentor</div>
+        <div class="exp-place-and-description">UTRGV — Mentored 21 students, providing guidance on programming and tooling setup.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Featured Projects</p>
+
+    <div class="pub">
+      <div class="pub-venue">Highlight</div>
+      <div class="pub-title">Homelab (Ongoing)</div>
+      <div class="pub-desc">Windows Server 2025 with pfSense for firewall and VLAN segmentation, Wazuh for SIEM monitoring. Configured DHCP and DNS services, simulates IT & SOC system alerts. </div>
+    </div>
+
+    <div class="pub">
+      <div class="pub-venue">Cloud / Azure</div>
+      <div class="pub-title">Virtual SOC Lab</div>
+      <div class="pub-desc">Azure-hosted red/blue team training environment. Features PentAGI + Ollama AI pentesting on the red team, and Wazuh SIEM monitoring on the blue team against vulnerable Linux and Windows VMs.</div>
+    </div>
+
+    <div class="pub">
+      <div class="pub-venue">Automation</div>
+      <div class="pub-title">
+        <a href="https://github.com/mauricodes04/banadi" target="_blank">banadi: AI-powered pentesting</a></div>
+      <div class="pub-desc">Combines Claude Code, Dockerized security tooling, CVE intelligence, and LLM-assisted analysis into a modular offensive security workflow. Includes automated reconnaissance and vulnerability triage.</div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Workshops & Outreach</p>
+
+    <div class="exp">
+      <span class="exp-date"><a href="https://vaqueroisi.org/" target="_blank">Vaquero Information Security Initiative</a></span>
+      <div>
+        <div class="exp-role">Vulnerability Management Workshop</div>
+        <div class="exp-place-and-description">Demonstrated OpenVAS, Nmap network discovery, and live SQL injection/path traversal attacks.</div>
+      </div>
+    </div>
+
+    <div class="exp">
+      <span class="exp-date"><a href="https://vaqueroisi.org/" target="_blank">Vaquero Information Security Initiative</a></span>
+      <div>
+        <div class="exp-role">Open-Source Intelligence Framework</div>
+        <div class="exp-place-and-description">Created a comprehensive toolkit covering Identity Lookup, Breach Intelligence, and Geospatial tracking.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    Mauricio Martinez
+  </footer>
+
+</div>
 </body>
 </html>
