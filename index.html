@@ -16,9 +16,10 @@
   MODULE comment down to (not including) the next MODULE comment and
   paste it where you want it. To remove a section, delete that same
   range. Available modules:
-    stage      numbered stage heading (id used by the sidebar TOC —
-               when you add a stage, also add a link in <nav class="toc">
-               and to the labIds list in the routing script)
+    stage      numbered stage heading; give it a unique id and a
+               data-toc="Short label". Routing picks up ids automatically;
+               /editor.html rebuilds the TOC from data-toc on Apply
+               (if hand-editing, also add the <li> in <nav class="toc">)
     substage   smaller sub-heading (e.g. 6a / 6b)
     prose      plain paragraph(s); can contain <ul>/<ol class="steps">
     photo      screenshot w/ caption (click to zoom)
@@ -519,6 +520,7 @@
     <nav class="toc">
       <p class="toc-label">On this page</p>
       <ol>
+        <!-- toc:auto:start -->
         <li><a href="#intro">Introduction</a></li>
         <li><a href="#stage-1">1 · Hypervisor setup</a></li>
         <li><a href="#stage-2">2 · Creating VMs</a></li>
@@ -530,13 +532,14 @@
         <li><a href="#stage-6">6 · Client VMs</a></li>
         <li><a href="#stage-7">7 · Wazuh agents</a></li>
         <li><a href="#future">Future implementations</a></li>
+        <!-- toc:auto:end -->
       </ol>
     </nav>
 
     <main>
 
   <!-- MODULE: prose -->
-  <p class="prose" id="intro">
+  <p class="prose" id="intro" data-toc="Introduction">
     After my internship at the county, I took it upon myself to create a homelab similar to how a standard enterprise may start their network architectures. I bought an EliteDesk desktop on Facebook Marketplace, but the seller didn’t have the power cable. One week of shipping later, I received a replacement power cable whose port wasn’t compatible with the PC. Looking into my box of IT cables and whatchamacallits, I found an adapter that fits securely into the PC but holds the charger cable like a motel power outlet. Since this homelab is for demonstration purposes only, the core power is being bridged by electrical tape with the tension of a gorilla’s grip.
   </p>
 
@@ -633,7 +636,7 @@
 
   <!-- ============================== STAGE 1 ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-1">
+  <div class="stage" id="stage-1" data-toc="Hypervisor setup">
     <span class="stage-num">1</span>
     <h2>Hypervisor setup (Proxmox)</h2>
   </div>
@@ -717,7 +720,7 @@ apt full-upgrade -y</pre>
 
   <!-- ============================== STAGE 2 ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-2">
+  <div class="stage" id="stage-2" data-toc="Creating VMs">
     <span class="stage-num">2</span>
     <h2>Creating VMs</h2>
   </div>
@@ -840,7 +843,7 @@ VLAN aware:  Checked</pre>
 
   <!-- ============================== STAGE 3A ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-3a">
+  <div class="stage" id="stage-3a" data-toc="Configuring pfSense">
     <span class="stage-num">3a</span>
     <h2>Configuring pfSense</h2>
   </div>
@@ -900,7 +903,7 @@ Do you want to revert to HTTP as the webConfigurator protocol? N</pre>
 
   <!-- ============================== STAGE 3B ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-3b">
+  <div class="stage" id="stage-3b" data-toc="Configuring VLANs">
     <span class="stage-num">3b</span>
     <h2>Configuring VLANs</h2>
   </div>
@@ -981,7 +984,7 @@ Do you want to proceed? Y</pre>
 
   <!-- ============================== STAGE 3C ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-3c">
+  <div class="stage" id="stage-3c" data-toc="Firewall rules">
     <span class="stage-num">3c</span>
     <h2>Configuring firewall rules</h2>
   </div>
@@ -1033,7 +1036,7 @@ Do you want to proceed? Y</pre>
 
   <!-- ============================== STAGE 4 ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-4">
+  <div class="stage" id="stage-4" data-toc="Windows Server + AD DS">
     <span class="stage-num">4</span>
     <h2>Windows Server 2025, AD, and AD DS</h2>
   </div>
@@ -1137,7 +1140,7 @@ Do you want to proceed? Y</pre>
 
   <!-- ============================== STAGE 5 ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-5">
+  <div class="stage" id="stage-5" data-toc="Wazuh server">
     <span class="stage-num">5</span>
     <h2>Wazuh all-in-one server</h2>
   </div>
@@ -1189,7 +1192,7 @@ sudo bash ./wazuh-install.sh -a</pre>
 
   <!-- ============================== STAGE 6 ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-6">
+  <div class="stage" id="stage-6" data-toc="Client VMs">
     <span class="stage-num">6</span>
     <h2>Client VMs</h2>
   </div>
@@ -1254,7 +1257,7 @@ sudo bash ./wazuh-install.sh -a</pre>
 
   <!-- ============================== STAGE 7 ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="stage-7">
+  <div class="stage" id="stage-7" data-toc="Wazuh agents">
     <span class="stage-num">7</span>
     <h2>Wazuh agents</h2>
   </div>
@@ -1307,7 +1310,7 @@ sudo bash ./wazuh-install.sh -a</pre>
 
   <!-- ============================== FUTURE ============================== -->
   <!-- MODULE: stage -->
-  <div class="stage" id="future">
+  <div class="stage" id="future" data-toc="Future implementations">
     <span class="stage-num">→</span>
     <h2>Future implementations</h2>
   </div>
@@ -1359,9 +1362,9 @@ sudo bash ./wazuh-install.sh -a</pre>
   });
 
   // --- view routing (#home vs #homelab + article anchors) ---
-  // When you add a stage to the article, add its id here and to the TOC.
-  const labIds = new Set(['homelab','intro','stage-1','stage-2','stage-3a','stage-3b','stage-3c',
-                          'stage-4','stage-5','stage-6','stage-6a','stage-6b','stage-7','future']);
+  // Any element id inside #view-lab routes to the Homelab view automatically.
+  const labIds = new Set(['homelab']);
+  document.querySelectorAll('#view-lab [id]').forEach(el => labIds.add(el.id));
   const viewHome = document.getElementById('view-home');
   const viewLab  = document.getElementById('view-lab');
   const tabHome  = document.getElementById('tab-home');
