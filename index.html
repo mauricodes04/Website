@@ -4,195 +4,412 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mauricio Martinez | Cybersecurity</title>
+<meta name="description" content="Mauricio Martinez — cybersecurity portfolio and the Prod Lab homelab walkthrough: Proxmox, pfSense, Active Directory, and Wazuh.">
+
+<!-- ================================================================
+  MAURICIO MARTINEZ — portfolio + Prod Lab article, single-page site.
+  The nav tabs switch views via the URL hash (#home / #homelab);
+  article section anchors (#stage-1 …) also open the Homelab view.
+
+  MODULE LEGEND — each article content block is tagged with a
+  "MODULE: name" comment. To add a section, copy everything from one
+  MODULE comment down to (not including) the next MODULE comment and
+  paste it where you want it. To remove a section, delete that same
+  range. Available modules:
+    stage      numbered stage heading (id used by the sidebar TOC —
+               when you add a stage, also add a link in <nav class="toc">
+               and to the labIds list in the routing script)
+    substage   smaller sub-heading (e.g. 6a / 6b)
+    prose      plain paragraph(s); can contain <ul>/<ol class="steps">
+    photo      screenshot w/ caption (click to zoom)
+    collapse   collapsible details block
+    table      table inside a horizontal-scroll wrapper
+    code       code block with copy button
+    callout    note / warning box
+    specs      stat chip strip
+    diagram    inline SVG topology
+    checklist  future-work list
+  Screenshots live in images/homelab/, numbered in article order.
+================================================================= -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-primary:    #1c1917; /* Greyish */
-    --bg-card:       #292524; /* Boxes */
-    --text-primary:  #fafaf9; /* Title, Links, Experience titles*/
-    --text-secondary:#d6d3d1; /* Experience descriptions */
-    --text-muted:    #78716c;
-    --border-subtle: #44403c; 
-    --teal:          #e7e5e4;
-    --accent:        #a8a29e;
+    --bg-primary:    #0f172a;
+    --bg-card:       #1e293b;
+    --text-primary:  #f1f5f9;
+    --text-secondary:#cbd5e1;
+    --text-muted:    #94a3b8;
+    --border-subtle: #334155;
+    --accent:        #fbbf24;
+    --accent-deep:   #f59e0b;
+    --note:          #38bdf8;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --mono: ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
   }
-  body { font-family: 'Inter', sans-serif; }
 
-  /* ================================================================
-     RESET & BASE
-     ================================================================ */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg-primary);
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
-    font-weight: 400;
     font-size: 15px;
     line-height: 1.7;
     min-height: 100vh;
   }
 
-  a { color: var(--teal); text-decoration: none; transition: 0.15s; }
+  a { color: var(--accent); text-decoration: none; transition: 0.15s; }
   a:hover { text-decoration: underline; }
 
-  /* ================================================================
-     LAYOUT
-     ================================================================ */
-  .container {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 80px 24px 120px;
+  /* --- site nav --- */
+  .site-nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-subtle);
   }
+  .site-nav .nav-inner {
+    max-width: 1000px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .site-nav .brand {
+    font-family: var(--serif); font-size: 16px; font-weight: 700;
+    color: var(--text-primary);
+  }
+  .site-nav .brand:hover { text-decoration: none; color: var(--accent); }
+  .site-nav .tabs { display: flex; gap: 26px; }
+  .site-nav .tabs a {
+    font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    font-weight: 600; color: var(--text-muted);
+    padding: 17px 0 15px; border-bottom: 2px solid transparent;
+  }
+  .site-nav .tabs a:hover { color: var(--text-primary); text-decoration: none; }
+  .site-nav .tabs a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .page { max-width: 1000px; margin: 0 auto; padding: 48px 24px 120px; }
+
+  /* --- article header --- */
+  .article-header { margin: 32px 0 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border-subtle); }
+  .article-header .kicker {
+    font-size: 12px; color: var(--accent); letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 700; margin-bottom: 14px;
+  }
+  .article-header h1 {
+    font-family: var(--serif); font-size: 46px; font-weight: 700;
+    line-height: 1.08; margin-bottom: 12px;
+  }
+  .article-header .subtitle { font-size: 17px; color: var(--text-secondary); margin-bottom: 18px; max-width: 620px; }
+  .article-header .meta { font-size: 13px; color: var(--text-muted); }
+  .article-header .meta b { color: var(--text-secondary); font-weight: 600; }
+
+  /* --- two-column layout with sticky TOC --- */
+  .layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px; align-items: start; }
+
+  nav.toc { position: sticky; top: 88px; max-height: calc(100vh - 120px); overflow-y: auto; }
+  nav.toc .toc-label {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-muted); font-weight: 700; margin-bottom: 14px;
+  }
+  nav.toc ol { list-style: none; }
+  nav.toc li { margin-bottom: 2px; }
+  nav.toc a {
+    display: block; font-size: 13px; color: var(--text-muted);
+    padding: 6px 12px; border-left: 2px solid var(--border-subtle);
+  }
+  nav.toc a:hover { color: var(--accent); border-left-color: var(--accent); text-decoration: none; }
+
+  /* --- prose --- */
+  .prose { color: var(--text-secondary); margin-bottom: 24px; }
+  .prose strong { color: var(--text-primary); }
+  .prose code {
+    font-family: var(--mono); font-size: 13px; background: var(--bg-card);
+    border: 1px solid var(--border-subtle); border-radius: 5px;
+    padding: 1px 6px; color: var(--accent);
+  }
+  .prose ul { margin: 12px 0 12px 22px; }
+  .prose ul li { margin-bottom: 6px; }
+  ol.steps { margin: 12px 0 24px 8px; list-style: none; counter-reset: step; color: var(--text-secondary); }
+  ol.steps li {
+    counter-increment: step; position: relative; padding: 6px 0 6px 40px;
+  }
+  ol.steps li::before {
+    content: counter(step); position: absolute; left: 0; top: 8px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--bg-card); border: 1px solid var(--accent-deep);
+    color: var(--accent); font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  ol.steps code {
+    font-family: var(--mono); font-size: 13px; background: var(--bg-card);
+    border: 1px solid var(--border-subtle); border-radius: 5px;
+    padding: 1px 6px; color: var(--accent);
+  }
+
+  /* --- stage heading (numbered badge) --- */
+  .stage {
+    display: flex; align-items: center; gap: 16px;
+    margin: 64px 0 24px; scroll-margin-top: 80px;
+  }
+  .stage .stage-num {
+    flex: 0 0 auto; min-width: 46px; height: 46px; border-radius: 10px;
+    background: var(--accent); color: #1c1400;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px; padding: 0 10px;
+  }
+  .stage h2 { font-family: var(--serif); font-size: 27px; font-weight: 700; letter-spacing: -0.2px; }
+
+  /* --- substage heading (6a, 6b, …) --- */
+  .substage { margin: 40px 0 18px; scroll-margin-top: 80px; }
+  .substage h3 { font-family: var(--serif); font-size: 21px; font-weight: 700; }
+  .substage h3 .sub-num { color: var(--accent); margin-right: 8px; }
+
+  /* --- spec chips --- */
+  .specs { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 28px; }
+  .specs .chip {
+    background: var(--bg-card); border: 1px solid var(--border-subtle);
+    border-radius: 10px; padding: 12px 16px; text-align: center; flex: 1 1 100px;
+    border-top: 2px solid var(--accent);
+  }
+  .specs .chip b { display: block; font-size: 18px; font-weight: 700; }
+  .specs .chip span { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+
+  /* --- photo --- */
+  figure.photo { margin: 28px 0; background: var(--bg-card); border: 1px solid var(--border-subtle);
+                 border-radius: 12px; padding: 10px; }
+  figure.photo img {
+    width: 100%; height: auto; display: block; border-radius: 6px; cursor: zoom-in;
+  }
+  figure.photo figcaption { font-size: 13px; color: var(--text-muted); padding: 10px 6px 2px; }
+  figure.photo figcaption::before { content: "Fig. "; color: var(--accent); font-weight: 600; }
+
+  /* --- collapsible --- */
+  details.collapse {
+    border: 1px solid var(--border-subtle); border-radius: 12px;
+    margin: 28px 0; background: var(--bg-card); overflow: hidden;
+  }
+  details.collapse summary {
+    cursor: pointer; padding: 15px 18px; font-weight: 600; font-size: 14px;
+    list-style: none; display: flex; align-items: center; gap: 12px;
+  }
+  details.collapse summary::-webkit-details-marker { display: none; }
+  details.collapse summary::after {
+    content: "▾"; margin-left: auto; color: var(--accent); transition: transform 0.15s;
+  }
+  details.collapse[open] summary::after { transform: rotate(180deg); }
+  details.collapse summary:hover { background: rgba(251, 191, 36, 0.05); }
+  details.collapse .collapse-body { padding: 16px 18px 18px; border-top: 1px solid var(--border-subtle); }
+
+  /* --- tables (zebra) --- */
+  .table-scroll { overflow-x: auto; margin: 24px 0; border: 1px solid var(--border-subtle);
+                  border-radius: 12px; background: var(--bg-card); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 480px; }
+  table.table-wide { min-width: 860px; }
+  caption {
+    caption-side: top; text-align: left; font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700; padding: 14px 16px 6px;
+  }
+  th, td { padding: 10px 16px; text-align: left; vertical-align: top; }
+  thead th {
+    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); border-bottom: 2px solid var(--border-subtle); font-weight: 700;
+  }
+  tbody tr:nth-child(odd) td { background: rgba(15, 23, 42, 0.55); }
+  tbody td { color: var(--text-secondary); }
+  tbody td:first-child { color: var(--text-primary); font-weight: 600; }
+  tr.total td { border-top: 2px solid var(--accent-deep); color: var(--text-primary); font-weight: 700; background: none !important; }
+  td code, th code { font-family: var(--mono); font-size: 12.5px; color: var(--accent); }
+
+  /* --- code block --- */
+  .codeblock { position: relative; margin: 24px 0; }
+  .codeblock pre {
+    background: #0b1120; border: 1px solid var(--border-subtle);
+    border-radius: 12px; padding: 16px 18px; overflow-x: auto;
+    font-family: var(--mono); font-size: 13px; line-height: 1.65;
+    color: var(--text-primary); border-left: 3px solid var(--accent);
+  }
+  .codeblock pre .cm { color: var(--text-muted); }
+  .codeblock .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; font-weight: 600;
+    background: var(--bg-card); color: var(--text-muted);
+    border: 1px solid var(--border-subtle); border-radius: 6px; padding: 4px 10px; cursor: pointer;
+  }
+  .codeblock .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* --- callout --- */
+  .callout {
+    border-radius: 12px; padding: 16px 18px; margin: 24px 0;
+    font-size: 14px; color: var(--text-secondary);
+    background: rgba(56, 189, 248, 0.07); border: 1px solid rgba(56, 189, 248, 0.25);
+  }
+  .callout .callout-label {
+    display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 700; color: var(--note); margin-bottom: 6px;
+  }
+  .callout.warning {
+    background: rgba(245, 158, 11, 0.07); border-color: rgba(245, 158, 11, 0.3);
+  }
+  .callout.warning .callout-label { color: var(--accent); }
+  .callout code {
+    font-family: var(--mono); font-size: 13px; background: var(--bg-card);
+    border: 1px solid var(--border-subtle); border-radius: 5px;
+    padding: 1px 6px; color: var(--accent);
+  }
+
+  /* --- diagram --- */
+  .diagram { margin: 28px 0; border: 1px solid var(--border-subtle); border-radius: 12px;
+             padding: 20px 12px; background: var(--bg-card); }
+  .diagram svg { width: 100%; height: auto; display: block; }
+  .diagram .d-box { fill: var(--bg-primary); stroke: var(--border-subtle); }
+  .diagram .d-box-accent { fill: var(--bg-primary); stroke: var(--accent); }
+  .diagram .d-line { stroke: var(--text-muted); stroke-width: 1.2; }
+  .diagram .d-zone { fill: none; stroke: var(--border-subtle); stroke-dasharray: 4 4; }
+  .diagram .d-title { fill: var(--text-primary); font: 600 12px 'Inter', sans-serif; }
+  .diagram .d-sub { fill: var(--text-muted); font: 400 10px ui-monospace, Menlo, monospace; }
+  .diagram .d-label { fill: var(--accent); font: 700 9px 'Inter', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
+  .diagram-caption { font-size: 13px; color: var(--text-muted); text-align: center; margin-top: 8px; }
+  .diagram-caption::before { content: "Fig. "; color: var(--accent); font-weight: 600; }
+
+  /* --- checklist --- */
+  ul.checklist { list-style: none; margin: 20px 0; background: var(--bg-card);
+                 border: 1px solid var(--border-subtle); border-radius: 12px; padding: 8px 18px; }
+  ul.checklist li {
+    padding: 11px 0 11px 32px; position: relative;
+    color: var(--text-secondary); font-size: 14px;
+  }
+  ul.checklist li + li { border-top: 1px solid var(--border-subtle); }
+  ul.checklist li::before {
+    content: ""; position: absolute; left: 2px; top: 15px; width: 14px; height: 14px;
+    border: 2px solid var(--accent-deep); border-radius: 4px;
+  }
+
+  .footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--border-subtle);
+            font-size: 13px; color: var(--text-muted); }
+
+  /* --- lightbox --- */
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(2, 6, 23, 0.92); display: none;
+    align-items: center; justify-content: center; z-index: 100; cursor: zoom-out; padding: 24px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; gap: 0; }
+    nav.toc { position: static; margin-bottom: 40px; max-height: none; }
+    nav.toc ol { display: flex; flex-wrap: wrap; gap: 8px; }
+    nav.toc a { border: 1px solid var(--border-subtle); border-radius: 20px; padding: 5px 14px; }
+  }
+  @media (max-width: 480px) {
+    .article-header h1 { font-size: 34px; }
+    .specs .chip { flex-basis: 44%; }
+  }
+
+  /* ================= home view (one-file experiment) ================= */
+  .container { max-width: 720px; margin: 0 auto; padding: 64px 24px 120px; }
 
   /* --- Header --- */
   .header { margin-bottom: 64px; }
-  
-  .header h1 {
-    font-size: 42px;
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.5px;
-    margin-bottom: 12px;
-  }
-  
   .header .tagline {
-    font-size: 14px;
-    color: var(--teal);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    font-weight: 600;
+    font-size: 12px; color: var(--accent); letter-spacing: 0.14em;
+    text-transform: uppercase; margin-bottom: 16px; font-weight: 700;
   }
-  
-  .header .bio {
-    color: var(--text-secondary);
-    font-size: 15px;
-    max-width: 540px;
-    margin-bottom: 24px;
+  .header h1 {
+    font-family: var(--serif);
+    font-size: 48px; font-weight: 700; line-height: 1.08;
+    margin-bottom: 14px;
   }
-  
-  .links {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  
+  .header .bio { color: var(--text-secondary); font-size: 15.5px; max-width: 560px; margin-bottom: 26px; }
+
+  .links { display: flex; gap: 12px; flex-wrap: wrap; }
   .links a {
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: 2px;
-    font-weight: 600;
+    font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-secondary); font-weight: 600;
+    background: var(--bg-card); border: 1px solid var(--border-subtle);
+    border-radius: 8px; padding: 7px 16px;
   }
-  
-  .links a:hover {
-    color: var(--teal);
-    border-color: var(--teal);
-    text-decoration: none;
-  }
+  .links a:hover { color: var(--accent); border-color: var(--accent-deep); text-decoration: none; }
 
   /* --- Sections --- */
-  section { margin-bottom: 56px; }
-  
+  section { margin-bottom: 64px; }
   .section-label {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 22px; font-weight: 700;
+  }
+  .section-label::after {
+    content: ""; display: block; margin-top: 10px;
     border-bottom: 1px solid var(--border-subtle);
-    font-weight: 600;
   }
 
-  /* --- Publications / Projects --- */
+  /* --- Projects (cards; whole card is clickable when it has a link) --- */
   .pub {
-    padding: 20px 0;
-    border-bottom: 1px solid var(--border-subtle);
+    display: block;
+    background: var(--bg-card); border: 1px solid var(--border-subtle);
+    border-radius: 12px; padding: 20px 22px; margin-bottom: 16px;
+    color: inherit;
   }
-  
-  .pub:last-child { border-bottom: none; }
-  
-  .pub-title {
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 8px;
-  }
-  
+  a.pub:hover { border-color: var(--accent-deep); text-decoration: none; }
+  .pub-title { font-family: var(--serif); font-size: 20px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; color: var(--text-primary); }
+  a.pub .pub-title::after { content: " →"; color: var(--accent); opacity: 0; transition: 0.15s; }
+  a.pub:hover .pub-title::after { opacity: 1; }
   .pub-venue {
-    display: inline-block;
-    font-size: 11px;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    background: var(--bg-card);
-    color: var(--teal);
-    padding: 4px 10px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border-subtle);
-    font-weight: 600;
+    display: inline-block; font-size: 11px; letter-spacing: 0.07em;
+    text-transform: uppercase; background: rgba(251, 191, 36, 0.1); color: var(--accent);
+    padding: 4px 10px; border-radius: 6px; margin-bottom: 10px;
+    border: 1px solid rgba(245, 158, 11, 0.3); font-weight: 700;
   }
-  
-  .pub-desc {
-    font-size: 14px;
-    color: var(--text-secondary);
-  }
+  .pub-desc { font-size: 14px; color: var(--text-secondary); }
 
-  /* --- Experience Lists --- */
+  /* --- Experience --- */
   .exp {
-    display: grid;
-    grid-template-columns: 130px 1fr;
-    gap: 8px 20px;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--border-subtle);
-    align-items: start;
+    display: grid; grid-template-columns: 140px 1fr; gap: 8px 20px;
+    padding: 18px 0; border-bottom: 1px solid var(--border-subtle); align-items: start;
   }
-  
   .exp:last-child { border-bottom: none; }
-  
-  .exp-date {
-    font-size: 13px;
-    color: var(--text-muted);
-    padding-top: 2px;
-    font-weight: 600;
-  }
-  
-  .exp-role {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: var(--text-primary);
-  }
-  
-  .exp-place-and-description {
-    font-size: 14px;
-    color: var(--text-secondary);
-  }
+  .exp-date { font-size: 13px; color: var(--text-muted); padding-top: 3px; font-weight: 600; }
+  .exp-role { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); }
+  .exp-place-and-description { font-size: 14px; color: var(--text-secondary); }
 
-  /* --- Footer --- */
-  .footer {
-    margin-top: 80px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border-subtle);
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  /* --- Responsive --- */
   @media (max-width: 480px) {
-    .header h1 { font-size: 32px; }
+    .header h1 { font-size: 36px; }
     .exp { grid-template-columns: 1fr; gap: 6px; }
     .exp-date { font-size: 12px; }
+    .site-nav .tabs { gap: 18px; }
+  }
+
+  /* --- one-file view switching --- */
+  #view-lab { display: none; }
+  body:not(.view-lab) .site-nav .nav-inner { max-width: 720px; }
+  .site-nav .nav-inner { transition: max-width 0.3s ease; }
+  @media (prefers-reduced-motion: no-preference) {
+    .fade-in { animation: viewFade 0.3s ease both; }
+    @keyframes viewFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
   }
 </style>
 </head>
 <body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="#home">Mauricio Martinez</a>
+    <div class="tabs">
+      <a id="tab-home" class="active" href="#home">Home</a>
+      <a id="tab-lab" href="#homelab">Homelab</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================== HOME VIEW ============================== -->
+<div id="view-home">
 <div class="container">
 
   <header class="header">
@@ -240,11 +457,11 @@
   <section>
     <p class="section-label">Featured Projects</p>
 
-    <div class="pub">
+    <a class="pub" href="#homelab">
       <div class="pub-venue">Highlight</div>
       <div class="pub-title">Homelab (Ongoing)</div>
-      <div class="pub-desc">Windows Server 2025 with pfSense for firewall and VLAN segmentation, Wazuh for SIEM monitoring. Configured DHCP and DNS services, simulates IT & SOC system alerts. </div>
-    </div>
+      <div class="pub-desc">Windows Server 2025 with pfSense for firewall and VLAN segmentation, Wazuh for SIEM monitoring. Configured DHCP and DNS services, simulates IT & SOC system alerts.</div>
+    </a>
 
     <div class="pub">
       <div class="pub-venue">Cloud / Azure</div>
@@ -252,12 +469,11 @@
       <div class="pub-desc">Azure-hosted red/blue team training environment. Features PentAGI + Ollama AI pentesting on the red team, and Wazuh SIEM monitoring on the blue team against vulnerable Linux and Windows VMs.</div>
     </div>
 
-    <div class="pub">
+    <a class="pub" href="https://github.com/mauricodes04/banadi" target="_blank" rel="noopener">
       <div class="pub-venue">Automation</div>
-      <div class="pub-title">
-        <a href="https://github.com/mauricodes04/banadi" target="_blank">banadi: AI-powered pentesting</a></div>
+      <div class="pub-title">banadi: AI-powered pentesting</div>
       <div class="pub-desc">Combines Claude Code, Dockerized security tooling, CVE intelligence, and LLM-assisted analysis into a modular offensive security workflow. Includes automated reconnaissance and vulnerability triage.</div>
-    </div>
+    </a>
   </section>
 
   <section>
@@ -285,5 +501,912 @@
   </footer>
 
 </div>
+</div><!-- /view-home -->
+
+<!-- ============================== HOMELAB VIEW ============================== -->
+<div id="view-lab">
+<div class="page">
+
+  <header class="article-header">
+    <p class="kicker">Homelab · Walkthrough</p>
+    <h1>Prod Lab</h1>
+    <p class="subtitle">Building an enterprise-style homelab on Proxmox — pfSense, Active Directory, and Wazuh.</p>
+    <p class="meta"><b>Mauricio Martinez</b> · July 2026 · Continuously updated</p>
+  </header>
+
+  <div class="layout">
+
+    <nav class="toc">
+      <p class="toc-label">On this page</p>
+      <ol>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#stage-1">1 · Hypervisor setup</a></li>
+        <li><a href="#stage-2">2 · Creating VMs</a></li>
+        <li><a href="#stage-3a">3a · Configuring pfSense</a></li>
+        <li><a href="#stage-3b">3b · Configuring VLANs</a></li>
+        <li><a href="#stage-3c">3c · Firewall rules</a></li>
+        <li><a href="#stage-4">4 · Windows Server + AD DS</a></li>
+        <li><a href="#stage-5">5 · Wazuh server</a></li>
+        <li><a href="#stage-6">6 · Client VMs</a></li>
+        <li><a href="#stage-7">7 · Wazuh agents</a></li>
+        <li><a href="#future">Future implementations</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+  <!-- MODULE: prose -->
+  <p class="prose" id="intro">
+    After my internship at the county, I took it upon myself to create a homelab similar to how a standard enterprise may start their network architectures. I bought an EliteDesk desktop on Facebook Marketplace, but the seller didn’t have the power cable. One week of shipping later, I received a replacement power cable whose port wasn’t compatible with the PC. Looking into my box of IT cables and whatchamacallits, I found an adapter that fits securely into the PC but holds the charger cable like a motel power outlet. Since this homelab is for demonstration purposes only, the core power is being bridged by electrical tape with the tension of a gorilla’s grip.
+  </p>
+
+  <!-- MODULE: specs -->
+  <p class="prose">This EliteDesk features:</p>
+  <div class="specs">
+    <div class="chip"><b>16 GB</b><span>RAM</span></div>
+    <div class="chip"><b>12</b><span>vCPU</span></div>
+    <div class="chip"><b>512 GB</b><span>SSD</span></div>
+    <div class="chip"><b>1</b><span>NIC</span></div>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    My home network is on an unmanaged switch, so I cannot create VLAN segmentation to divide different networks. pfSense allows me to create both VLANs and firewall rules between them.
+  </p>
+
+  <!-- MODULE: table -->
+  <div class="table-scroll">
+    <table>
+      <caption>Subnets</caption>
+      <thead><tr><th>Subnet</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>192.168.1.0/24</code></td><td>WAN / Home network</td></tr>
+        <tr><td><code>10.10.10.1/24</code></td><td>Servers</td></tr>
+        <tr><td><code>10.10.20.1/24</code></td><td>Clients</td></tr>
+        <tr><td><code>10.10.30.1/24</code></td><td>DMZ</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODULE: table -->
+  <div class="table-scroll">
+    <table>
+      <caption>Virtual machines</caption>
+      <thead>
+        <tr><th>Name</th><th>Static/Dynamic</th><th>IP</th><th>DNS</th><th>vCPU</th><th>RAM</th><th>Storage</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>pfSense</td><td>Static</td><td><code>WAN: 192.168.1.101</code><br><code>LAN: 10.10.0.1</code></td><td><code>192.168.1.1</code></td><td>1</td><td>2 GB</td><td>32 GB</td></tr>
+        <tr><td>Windows Server 2025</td><td>Static</td><td><code>10.10.10.10</code></td><td><code>10.10.10.10</code></td><td>1</td><td>4 GB</td><td>150 GB</td></tr>
+        <tr><td>Wazuh All-in-one Server</td><td>Static</td><td><code>10.10.10.11</code></td><td><code>10.10.10.10</code></td><td>2</td><td>6 GB</td><td>80 GB</td></tr>
+        <tr><td>Windows 11 client</td><td>Dynamic</td><td><code>10.10.20.100</code></td><td><code>10.10.10.10</code></td><td>2</td><td>4 GB</td><td>80 GB</td></tr>
+        <tr><td>Linux / Kali client</td><td>Dynamic</td><td><code>10.10.20.101</code></td><td><code>10.10.10.10</code></td><td>2</td><td>4 GB</td><td>80 GB</td></tr>
+        <tr class="total"><td>Total</td><td></td><td></td><td></td><td>8</td><td>20 GB</td><td>422 GB</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODULE: diagram -->
+  <div class="diagram">
+    <svg viewBox="0 0 640 430" role="img" aria-label="Top-down network topology">
+      <rect class="d-box" x="245" y="10" width="150" height="52" rx="8"/>
+      <text class="d-title" x="320" y="32" text-anchor="middle">Home network</text>
+      <text class="d-sub" x="320" y="48" text-anchor="middle">192.168.1.0/24 (WAN)</text>
+      <line class="d-line" x1="320" y1="62" x2="320" y2="96"/>
+      <rect class="d-box-accent" x="230" y="96" width="180" height="66" rx="8"/>
+      <text class="d-title" x="320" y="120" text-anchor="middle">pfSense</text>
+      <text class="d-sub" x="320" y="136" text-anchor="middle">WAN 192.168.1.101</text>
+      <text class="d-sub" x="320" y="150" text-anchor="middle">LAN 10.10.0.1 · vmbr1</text>
+      <line class="d-line" x1="320" y1="162" x2="320" y2="186"/>
+      <line class="d-line" x1="150" y1="186" x2="490" y2="186"/>
+      <line class="d-line" x1="150" y1="186" x2="150" y2="210"/>
+      <line class="d-line" x1="320" y1="186" x2="320" y2="210"/>
+      <line class="d-line" x1="490" y1="186" x2="490" y2="210"/>
+      <rect class="d-zone" x="40" y="210" width="220" height="180" rx="10"/>
+      <text class="d-label" x="52" y="230">VLAN 10 · Servers · 10.10.10.1/24</text>
+      <rect class="d-box" x="60" y="244" width="180" height="52" rx="8"/>
+      <text class="d-title" x="150" y="266" text-anchor="middle">WinServer2025</text>
+      <text class="d-sub" x="150" y="282" text-anchor="middle">AD DS · DNS · 10.10.10.10</text>
+      <rect class="d-box" x="60" y="312" width="180" height="52" rx="8"/>
+      <text class="d-title" x="150" y="334" text-anchor="middle">WazuhServer</text>
+      <text class="d-sub" x="150" y="350" text-anchor="middle">SIEM · 10.10.10.11</text>
+      <rect class="d-zone" x="280" y="210" width="220" height="180" rx="10"/>
+      <text class="d-label" x="292" y="230">VLAN 20 · Clients · 10.10.20.1/24</text>
+      <rect class="d-box" x="300" y="244" width="180" height="52" rx="8"/>
+      <text class="d-title" x="390" y="266" text-anchor="middle">WinClient1</text>
+      <text class="d-sub" x="390" y="282" text-anchor="middle">Windows 11 · 10.10.20.100</text>
+      <rect class="d-box" x="300" y="312" width="180" height="52" rx="8"/>
+      <text class="d-title" x="390" y="334" text-anchor="middle">LinuxClient1</text>
+      <text class="d-sub" x="390" y="350" text-anchor="middle">Kali · 10.10.20.101</text>
+      <rect class="d-zone" x="520" y="210" width="110" height="180" rx="10"/>
+      <text class="d-label" x="532" y="230">VLAN 30 · DMZ</text>
+      <text class="d-sub" x="575" y="300" text-anchor="middle">10.10.30.1/24</text>
+      <text class="d-sub" x="575" y="316" text-anchor="middle">(reserved)</text>
+    </svg>
+    <p class="diagram-caption">Top-down topology</p>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Throughout creating this environment numerous times, I practice learning how to set up firewall rules, Active Directory DS, VLANs, DHCP rules, and virtualization by using Proxmox. Because I was guided by both AI and other public resources like Reddit, I was misled numerous times forcing me to reverse, make exceptions, and — although it sounds like giving up but it helps me cement my understanding — reimage the hypervisor. I now have and will share my guided walkthrough of how to create this environment while continuously updating it as I continue to grow my curiosity and hardware.
+  </p>
+
+  <!-- ============================== STAGE 1 ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-1">
+    <span class="stage-num">1</span>
+    <h2>Hypervisor setup (Proxmox)</h2>
+  </div>
+
+  <!-- MODULE: collapse -->
+  <details class="collapse">
+    <summary>Cleaning / wiping the bootable drive</summary>
+    <div class="collapse-body">
+      <p class="prose">
+        I’ve had trouble wiping the USB with both File Explorer and Disk Management. The best application I’ve been using is <code>diskpart</code> in Windows. While the USB is plugged in, open CMD and execute:
+      </p>
+      <!-- MODULE: code -->
+      <div class="codeblock">
+        <button class="copy-btn" type="button">Copy</button>
+        <pre>diskpart        <span class="cm"># opens diskpart</span>
+list disk       <span class="cm"># find USB drive</span>
+select disk #   <span class="cm"># select USB</span>
+clean           <span class="cm"># wipes USB</span></pre>
+      </div>
+      <!-- MODULE: photo -->
+      <figure class="photo">
+        <img src="images/homelab/01-diskpart-clean.jpg" alt="diskpart session showing list disk, select disk 3, and clean" loading="lazy">
+        <figcaption>diskpart: list, select, and clean the USB drive.</figcaption>
+      </figure>
+    </div>
+  </details>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Download the latest <a href="https://rufus.ie/en/#download" target="_blank" rel="noopener">Rufus here</a>.<br>
+    Download the latest <a href="https://www.proxmox.com/en/downloads/proxmox-virtual-environment/iso" target="_blank" rel="noopener">Proxmox ISO here</a>.
+  </p>
+  <p class="prose">
+    As a naming convention throughout this article, I will refer to the EliteDesk PC as a hypervisor. On a fresh USB stick, open Rufus and select both your USB and the Proxmox ISO. It’ll show an alert saying DD image writing mode will be used, ignore it. Click “Start” and unplug when completed.
+  </p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/02-rufus.jpg" alt="Rufus with the USB device and Proxmox ISO selected" loading="lazy">
+    <figcaption>Rufus with the USB stick and Proxmox ISO selected.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Plug in the bootable USB, monitor, and keyboard to the hypervisor and turn on. Different computers have different keybinds to open the boot manager; F12, F11, F8, or Esc. At the boot manager, choose your USB drive and go through the installation process until you reach the networking settings.
+  </p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>Hostname:    homelab.internal
+IP Address:  192.168.1.100    <span class="cm"># static IP where you’ll reach your UI</span>
+Gateway:     192.168.1.1
+DNS Server:  192.168.1.1</pre>
+  </div>
+
+  <!-- MODULE: callout -->
+  <div class="callout">
+    <span class="callout-label">Note</span>
+    <em>homelab</em> is a placeholder for your internal domain name — but make sure it’s <code>.internal</code>.
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">After installation, open the UI on your desktop at <code>192.168.1.100:8006</code></p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/03-proxmox-web-ui.png" alt="Proxmox VE web interface showing the datacenter view" loading="lazy">
+    <figcaption>The Proxmox VE web UI after a fresh install.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now verify we updated everything by going to the shell and running:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>apt update
+apt full-upgrade -y</pre>
+  </div>
+
+  <!-- ============================== STAGE 2 ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-2">
+    <span class="stage-num">2</span>
+    <h2>Creating VMs</h2>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Create the <code>vmbr1</code> VLAN network interface:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>Datacenter → Node → Network → Create → Linux Bridge
+Name:        vmbr1
+VLAN aware:  Checked</pre>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Start by importing all the ISOs of the machines that will be running in this homelab:</p>
+
+  <!-- MODULE: table -->
+  <div class="table-scroll">
+    <table>
+      <caption>ISO downloads</caption>
+      <thead><tr><th>Machine</th><th>Download</th></tr></thead>
+      <tbody>
+        <tr><td>pfSense Community Edition</td><td><a href="https://www.pfsense.org/download/" target="_blank" rel="noopener">pfsense.org/download</a></td></tr>
+        <tr><td>Windows Server 2025</td><td><a href="https://info.microsoft.com/ww-landing-evaluate-windows-server-2025.html?lcid=en-us&amp;culture=en-us&amp;country=us" target="_blank" rel="noopener">microsoft.com — evaluate Windows Server 2025</a></td></tr>
+        <tr><td>Ubuntu 26.04 LTS</td><td><a href="https://ubuntu.com/download/server" target="_blank" rel="noopener">ubuntu.com/download/server</a></td></tr>
+        <tr><td>Windows 11</td><td><a href="https://www.microsoft.com/en-us/software-download/windows11" target="_blank" rel="noopener">microsoft.com/software-download/windows11</a></td></tr>
+        <tr><td>Kali</td><td><a href="https://www.kali.org/get-kali/#kali-installer-images" target="_blank" rel="noopener">kali.org/get-kali</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">To import all of the ISO files to Proxmox, go to:<br>
+  <code>Datacenter → Node → local → ISO Images → Upload</code></p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/04-proxmox-iso-upload.png" alt="Proxmox ISO upload dialog showing Windows Server 2025 ISO uploading" loading="lazy">
+    <figcaption>Uploading an ISO to Proxmox local storage.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now on the top right, click <strong>Create VM</strong>:</p>
+
+  <!-- MODULE: table -->
+  <div class="table-scroll">
+    <table class="table-wide">
+      <caption>VM creation settings</caption>
+      <thead>
+        <tr><th></th><th>pfSense</th><th>WinServer2025</th><th>WazuhServer</th><th>WinClient1</th><th>LinuxClient1</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>General</td>
+          <td>VM ID: <code>101</code><br>Name: pfSense</td>
+          <td>VM ID: <code>102</code><br>Name: WinServer2025</td>
+          <td>VM ID: <code>103</code><br>Name: WazuhServer</td>
+          <td>VM ID: <code>200</code><br>Name: WinClient1</td>
+          <td>VM ID: <code>201</code><br>Name: LinuxClient1</td>
+        </tr>
+        <tr>
+          <td>OS</td>
+          <td>ISO: <code>pfSense.iso</code></td>
+          <td>ISO: <code>Windows_Server_2025.iso</code><br>Type: Microsoft Windows</td>
+          <td>ISO: <code>Ubuntu_Server_26-04.iso</code><br>Type: Linux</td>
+          <td>ISO: <code>Windows_11.iso</code><br>Type: Microsoft Windows</td>
+          <td>ISO: <code>Kali.iso</code><br>Type: Linux</td>
+        </tr>
+        <tr>
+          <td>System</td>
+          <td>Defaults</td>
+          <td>EFI Storage: <code>local-lvm</code><br>TPM Storage: <code>local-lvm</code></td>
+          <td>Defaults</td>
+          <td>EFI Storage: <code>local-lvm</code><br>TPM Storage: <code>local-lvm</code></td>
+          <td>Defaults</td>
+        </tr>
+        <tr>
+          <td>Disks</td>
+          <td>32 GB<br>SSD Emulation: ✓</td>
+          <td>150 GB<br>SSD Emulation: ✓</td>
+          <td>80 GB<br>SSD Emulation: ✓</td>
+          <td>80 GB<br>SSD Emulation: ✓</td>
+          <td>80 GB<br>SSD Emulation: ✓</td>
+        </tr>
+        <tr>
+          <td>CPU</td>
+          <td>Sockets: 1<br>Cores: 1<br>Type: host</td>
+          <td>Sockets: 1<br>Cores: 1<br>Type: host</td>
+          <td>Sockets: 2<br>Cores: 1<br>Type: host</td>
+          <td>Sockets: 2<br>Cores: 1<br>Type: host</td>
+          <td>Sockets: 2<br>Cores: 1<br>Type: host</td>
+        </tr>
+        <tr>
+          <td>Memory</td>
+          <td><code>2048</code></td>
+          <td><code>4096</code></td>
+          <td><code>6144</code></td>
+          <td><code>4096</code></td>
+          <td><code>4096</code></td>
+        </tr>
+        <tr>
+          <td>Network</td>
+          <td>Bridge: <code>vmbr0</code> **</td>
+          <td>Bridge: <code>vmbr1</code><br>VLAN Tag: <code>10</code></td>
+          <td>Bridge: <code>vmbr1</code><br>VLAN Tag: <code>10</code></td>
+          <td>Bridge: <code>vmbr1</code><br>VLAN Tag: <code>20</code></td>
+          <td>Bridge: <code>vmbr1</code><br>VLAN Tag: <code>20</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODULE: callout -->
+  <div class="callout">
+    <span class="callout-label">**</span>
+    For pfSense, go to <code>Hardware → Add → Network Device → Bridge: vmbr1</code>
+  </div>
+
+  <!-- ============================== STAGE 3A ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-3a">
+    <span class="stage-num">3a</span>
+    <h2>Configuring pfSense</h2>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Start pfSense.</p>
+  <p class="prose">
+    <em>Please select the WAN interface:</em> <code>vtnet0</code><br>
+    <em>Please select the LAN interface:</em> <code>vtnet1</code>
+  </p>
+  <p class="prose">Proceed through the installation until you restart and reach the console.</p>
+
+  <!-- MODULE: collapse -->
+  <details class="collapse">
+    <summary>Configuring the WAN IP address</summary>
+    <div class="collapse-body">
+      <!-- MODULE: code -->
+      <div class="codeblock">
+        <button class="copy-btn" type="button">Copy</button>
+        <pre>Set Interface(s) IP address →
+Enter the number of the interface you wish to configure: 1 (WAN) →
+Configure IPv4 address WAN interface via DHCP? N →
+Enter the new WAN IPv4 address: 192.168.1.101 →
+Enter the new WAN IPv4 subnet bit count: 24 →
+For a WAN, enter the new WAN IPv4 upstream gateway address: 192.168.1.1 →
+Should this gateway be set as the default gateway? Y →
+Configure IPv6 address WAN interface via DHCP6? N →
+Enter the new WAN IPv6 address: &lt;blank&gt; →
+Do you want to enable the DHCP server on WAN? N →
+Do you want to revert to HTTP as the webConfigurator protocol? N</pre>
+      </div>
+      <p class="prose">Now the pfSense firewall is on a static IP (<code>192.168.1.101</code>).</p>
+    </div>
+  </details>
+
+  <!-- MODULE: collapse -->
+  <details class="collapse">
+    <summary>Configuring the LAN IP address</summary>
+    <div class="collapse-body">
+      <!-- MODULE: code -->
+      <div class="codeblock">
+        <button class="copy-btn" type="button">Copy</button>
+        <pre>Set Interface(s) IP address →
+Enter the number of the interface you wish to configure: 2 (LAN) →
+Configure IPv4 address LAN interface via DHCP? N →
+Enter the new LAN IPv4 address: 10.10.0.1 →
+Enter the new LAN IPv4 subnet bit count: 24 →
+For a LAN, press &lt;ENTER&gt; for none: Press enter →
+Configure IPv6 address LAN interface via DHCP6? N →
+Enter the new LAN IPv6 address: &lt;blank&gt; →
+Do you want to enable the DHCP server on LAN? N →
+Do you want to revert to HTTP as the webConfigurator protocol? N</pre>
+      </div>
+      <p class="prose">Now the pfSense firewall is on a static IP (<code>10.10.0.1</code>).</p>
+    </div>
+  </details>
+
+  <!-- ============================== STAGE 3B ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-3b">
+    <span class="stage-num">3b</span>
+    <h2>Configuring VLANs</h2>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Press <code>1</code> to start configurations: <em>Should VLANs be set up now?</em> <code>Y</code></p>
+
+  <!-- MODULE: table -->
+  <div class="table-scroll">
+    <table>
+      <caption>VLAN creation</caption>
+      <thead><tr><th>Prompt</th><th>VLAN 10</th><th>VLAN 20</th></tr></thead>
+      <tbody>
+        <tr><td>Enter the parent interface name for the new VLAN</td><td><code>vtnet1</code></td><td><code>vtnet1</code></td></tr>
+        <tr><td>Enter the VLAN tag</td><td><code>10</code></td><td><code>20</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>Enter the WAN interface name:         vtnet0
+Enter the LAN interface name:         vtnet1
+Enter the Optional 1 interface name:  vtnet1.10
+Enter the Optional 2 interface name:  vtnet1.20
+Do you want to proceed? Y</pre>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now we need to set up the IP address range and DHCP. Press <code>2</code>.</p>
+
+  <!-- MODULE: table -->
+  <div class="table-scroll">
+    <table>
+      <caption>Interface IP + DHCP configuration</caption>
+      <thead><tr><th>Prompt</th><th>OPT1</th><th>OPT2</th></tr></thead>
+      <tbody>
+        <tr><td>Enter the number of the interface you wish to configure</td><td><code>3 (OPT1)</code></td><td><code>4 (OPT2)</code></td></tr>
+        <tr><td>Configure IPv4 address via DHCP?</td><td><code>n</code></td><td><code>n</code></td></tr>
+        <tr><td>Enter the new IPv4 address</td><td><code>10.10.10.1</code></td><td><code>10.10.20.1</code></td></tr>
+        <tr><td>Enter the new IPv4 subnet bit count (1 to 32)</td><td><code>24</code></td><td><code>24</code></td></tr>
+        <tr><td>For a LAN, press &lt;ENTER&gt; for none</td><td><code>&lt;ENTER&gt;</code></td><td><code>&lt;ENTER&gt;</code></td></tr>
+        <tr><td>Configure IPv6 address via DHCP6?</td><td><code>n</code></td><td><code>n</code></td></tr>
+        <tr><td>Enter the new IPv6 address. Press &lt;ENTER&gt; for none</td><td><code>&lt;ENTER&gt;</code></td><td><code>&lt;ENTER&gt;</code></td></tr>
+        <tr><td>Do you want to enable the DHCP server on the interface?</td><td><code>y</code></td><td><code>y</code></td></tr>
+        <tr><td>Enter the start address of the IPv4 client address range</td><td><code>10.10.10.100</code></td><td><code>10.10.20.100</code></td></tr>
+        <tr><td>Enter the end address of the IPv4 client address range</td><td><code>10.10.10.200</code></td><td><code>10.10.20.200</code></td></tr>
+        <tr><td>Do you want to revert to HTTP as the webConfigurator protocol?</td><td><code>n</code></td><td><code>n</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now we need to reset the admin account and password by pressing <code>3</code>.</p>
+
+  <!-- MODULE: callout -->
+  <div class="callout warning">
+    <span class="callout-label">Heads up</span>
+    pfSense restricts access to the Web UI through the WAN by default, so to get access without having to make a VM in its LAN, run <code>pfctl -d</code> to disable the firewall. Now we can access the pfSense Web UI at <code>192.168.1.101:443</code>.
+  </div>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/05-pfsense-dashboard.png" alt="pfSense dashboard with WAN, LAN, OPT1, and OPT2 interfaces up" loading="lazy">
+    <figcaption>pfSense dashboard — all four interfaces up.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    <code>Interfaces → OPT1</code> and change the Description to <strong>SERVERS</strong>.<br>
+    <code>Interfaces → OPT2</code> and change the Description to <strong>CLIENTS</strong>.
+  </p>
+  <ul class="prose">
+    <li><strong>Interfaces → WAN</strong> → uncheck “Block private networks and loopback” and “Block bogon networks.”</li>
+    <li><strong>Firewall → Rules → WAN</strong> → add: pass TCP, source = <code>192.168.1.x</code> (your PC) OR <em>WAN subnets</em>, dest = <em>This Firewall (self)</em>, port 443.</li>
+  </ul>
+
+  <!-- ============================== STAGE 3C ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-3c">
+    <span class="stage-num">3c</span>
+    <h2>Configuring firewall rules</h2>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose"><code>Firewall → Aliases → Ports</code></p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/06-pfsense-port-aliases.png" alt="pfSense port aliases: AD_mgmt with Kerberos, RPC, LDAP, SMB ports and mgmt with 443, 80, 22" loading="lazy">
+    <figcaption>Port aliases — <code>AD_mgmt</code> (Kerberos, RPC EPM, LDAP/LDAPS, SMB, Global Catalog) and <code>mgmt</code> (443, 80, 22).</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose"><code>Firewall → Rules</code></p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/07-pfsense-rules-wan.png" alt="pfSense WAN firewall rules" loading="lazy">
+    <figcaption>WAN rules — UI access from WAN, deny all other WAN traffic to pfSense, diagnostics ping check.</figcaption>
+  </figure>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/08-pfsense-rules-lan.png" alt="pfSense LAN firewall rules" loading="lazy">
+    <figcaption>LAN rules — anti-lockout, DNS to pfSense resolver, and deny/allow rules for the SERVERS subnet.</figcaption>
+  </figure>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/09-pfsense-rules-servers.png" alt="pfSense SERVERS firewall rules" loading="lazy">
+    <figcaption>SERVERS rules — pass DNS to pfSense resolver, deny pfSense management, deny traffic to Clients and home WAN, allow internet access for OS/Wazuh updates.</figcaption>
+  </figure>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/10-pfsense-rules-clients.png" alt="pfSense CLIENTS firewall rules" loading="lazy">
+    <figcaption>CLIENTS rules — DNS/AD management/RPC/NTP to the AD DC, Wazuh agent traffic (ports 1514–1515) to the Wazuh server, deny rules, and internet access. Note: the Wazuh rule should point to <code>10.10.10.11</code> — the screenshot shows an older <code>10.10.10.53</code> address.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Also add <code>10.10.10.10</code> (AD DS) to the default DNS servers for the client subnet:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>Services → DHCP Server → CLIENTS interface → DNS Servers field → set to 10.10.10.10 → Save → Apply Changes</pre>
+  </div>
+
+  <!-- ============================== STAGE 4 ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-4">
+    <span class="stage-num">4</span>
+    <h2>Windows Server 2025, AD, and AD DS</h2>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Turn on the WinServer2025 VM and go through the installation steps. Choose the <strong>Desktop Experience</strong>.</p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/11-winserver-desktop-experience.png" alt="Windows Server 2025 setup with Standard Evaluation (Desktop Experience) selected" loading="lazy">
+    <figcaption>Windows Server 2025 Standard Evaluation (Desktop Experience).</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Once finished, we need to set a static IP and gateway.<br>
+    Open <code>Control Panel → Network and Sharing Center → Change adapter settings → Ethernet</code>
+  </p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/12-winserver-ethernet-status.png" alt="Ethernet Status dialog with Properties button highlighted" loading="lazy">
+    <figcaption>Ethernet Status → Properties.</figcaption>
+  </figure>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/13-winserver-ethernet-properties.png" alt="Ethernet Properties with Internet Protocol Version 4 highlighted" loading="lazy">
+    <figcaption>Ethernet Properties → Internet Protocol Version 4 (TCP/IPv4).</figcaption>
+  </figure>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/14-winserver-static-ip.png" alt="IPv4 properties with static IP 10.10.10.10, gateway 10.10.10.1, DNS 10.10.10.10" loading="lazy">
+    <figcaption>Static addressing for the domain controller.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Now the server has a static IP of <code>10.10.10.10</code>, gateway <code>10.10.10.1</code>, and DNS <code>10.10.10.10</code> (itself).
+    And we can change the name of the computer by going to <code>Server Manager → Local Server → Computer name</code>
+  </p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/15-winserver-server-manager.png" alt="Server Manager Local Server panel with computer name highlighted" loading="lazy">
+    <figcaption>Server Manager → Local Server.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now go to <code>Change → Computer name: WinServer2025</code> — then restart to apply changes.</p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/16-winserver-rename.png" alt="System Properties and Computer Name/Domain Changes dialogs renaming to WinServer2025" loading="lazy">
+    <figcaption>Renaming the computer to WinServer2025.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Now we need to create the Domain Controller.<br>
+    In <code>Server Manager → Manage → Add Roles and Features</code> → go until you reach Server Roles and check <strong>“Active Directory Domain Services”</strong>. Continue and Install.
+  </p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/17-winserver-adds-role.png" alt="Add Roles and Features wizard with Active Directory Domain Services checked" loading="lazy">
+    <figcaption>Selecting the Active Directory Domain Services role.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now promote the server to a domain controller by clicking the flag at the top right in the Dashboard:</p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/18-winserver-promote-dc.png" alt="Post-deployment configuration flag with Promote this server to a domain controller link" loading="lazy">
+    <figcaption>“Promote this server to a domain controller.”</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Select <strong>“Add a new forest”</strong> and use your <code>homelab.internal</code> domain name.</p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/19-winserver-new-forest.png" alt="AD DS configuration wizard with Add a new forest selected and root domain name homelab.internal" loading="lazy">
+    <figcaption>Deployment configuration — add a new forest.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Navigate through the Wizard and hit Install, it’ll reboot after.</p>
+  <p class="prose">
+    <strong>DNS Forwarder:</strong><br>
+    <code>DNS Manager → server → Properties → Forwarders → add 10.10.10.1</code> (pfSense resolver). This gives the DC external resolution while it stays authoritative for the domain.
+  </p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/20-winserver-dns-forwarder.png" alt="DNS server Forwarders tab with 10.10.10.1 added" loading="lazy">
+    <figcaption>DNS forwarder pointing at the pfSense resolver.</figcaption>
+  </figure>
+
+  <!-- ============================== STAGE 5 ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-5">
+    <span class="stage-num">5</span>
+    <h2>Wazuh all-in-one server</h2>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Start the WazuhServer VM and navigate through the installer until you reach Network configuration:</p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/21-wazuh-network-config.png" alt="Ubuntu installer IPv4 configuration with address 10.10.10.11, gateway 10.10.10.1, name server 10.10.10.10" loading="lazy">
+    <figcaption>Manual IPv4 configuration — <code>10.10.10.11</code> on the SERVERS subnet.</figcaption>
+  </figure>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/22-wazuh-profile-config.png" alt="Ubuntu installer profile configuration with server name and username wazuhserver" loading="lazy">
+    <figcaption>Profile configuration for the Wazuh server.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">After reboot, remove installation media in Hardware, log in, and run:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>sudo apt update && sudo apt full-upgrade -y
+curl -sO https://packages.wazuh.com/4.14/wazuh-install.sh
+sudo bash ./wazuh-install.sh -a</pre>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Credentials will be posted after installation, but you can also find them here in case you cleared it:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>sudo tar -O -xvf wazuh-install-files.tar \
+  wazuh-install-files/wazuh-passwords.txt</pre>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now on the WinServer2025 VM, navigate to <code>https://10.10.10.11</code> and change the password, which must fit the requirements:</p>
+  <ul class="prose">
+    <li>Between 8–64 characters</li>
+    <li>Contain at least one upper and lowercase letter</li>
+    <li>A number</li>
+    <li>A symbol of either <code>.*+?-</code></li>
+  </ul>
+
+  <!-- ============================== STAGE 6 ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-6">
+    <span class="stage-num">6</span>
+    <h2>Client VMs</h2>
+  </div>
+
+  <!-- MODULE: substage -->
+  <div class="substage" id="stage-6a">
+    <h3><span class="sub-num">6a</span>WinClient1</h3>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Start the WinClient VM.</p>
+  <ol class="steps">
+    <li>When asked for product key, select <strong>“I don’t have a product key”</strong>.</li>
+    <li>Select <strong>Windows 11 Pro</strong>.</li>
+    <li>Name the device: <code>WinClient1</code></li>
+    <li>Set up for work or school.</li>
+    <li>When it asks to sign into Microsoft, hit <code>Shift + F10</code> and run <code>start ms-cxh:localonly</code></li>
+    <li>Who’s going to use this PC?: <code>Employee 1</code> · Password: <code>employee1</code></li>
+    <li>For all of the security questions, I put <code>employee1</code> as the answer.</li>
+  </ol>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/23-winclient-win11-pro.png" alt="Windows 11 setup with Windows 11 Pro selected" loading="lazy">
+    <figcaption>Selecting Windows 11 Pro during client setup.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Verify that DNS is set:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>Resolve-DNSName homelab.internal</pre>
+  </div>
+
+  <!-- MODULE: substage -->
+  <div class="substage" id="stage-6b">
+    <h3><span class="sub-num">6b</span>LinuxClient1</h3>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Start LinuxClient1.</p>
+  <ol class="steps">
+    <li>Hostname: <code>LinuxClient1</code></li>
+    <li>Domain name: <code>homelab.internal</code></li>
+    <li>Username: <code>employee2</code></li>
+  </ol>
+  <p class="prose">After going through the wizard, reboot and then run:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>sudo apt update && sudo apt full-upgrade -y</pre>
+  </div>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/24-linuxclient-apt-upgrade.png" alt="Kali terminal on LinuxClient1 running sudo apt update and full-upgrade" loading="lazy">
+    <figcaption>Updating the Kali client.</figcaption>
+  </figure>
+
+  <!-- ============================== STAGE 7 ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-7">
+    <span class="stage-num">7</span>
+    <h2>Wazuh agents</h2>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    In the WinServer2025 VM, log into the Wazuh dashboard and go to <strong>+ Deploy new agent</strong>.
+  </p>
+  <p class="prose">For WinClient1:</p>
+  <ol class="steps">
+    <li>Select <strong>MSI 32/64 bits</strong>.</li>
+    <li>Server address: <code>10.10.10.11</code></li>
+    <li>Agent name: <code>WinClient1</code></li>
+    <li>On the WinClient1 VM, run PowerShell as administrator and run the command.</li>
+    <li>Run <code>NET START Wazuh</code></li>
+  </ol>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/25-agent-winclient-powershell.png" alt="PowerShell installing the Wazuh agent MSI and starting the Wazuh service" loading="lazy">
+    <figcaption>Installing and starting the Wazuh agent on WinClient1.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">For LinuxClient1:</p>
+  <ol class="steps">
+    <li>Select <strong>DEB amd64</strong>.</li>
+    <li>Server address: <code>10.10.10.11</code></li>
+    <li>Agent name: <code>LinuxClient1</code></li>
+    <li>Copy the command to the terminal.</li>
+    <li>Run <code>sudo systemctl daemon-reload</code></li>
+    <li>Run <code>sudo systemctl enable wazuh-agent</code></li>
+    <li>Run <code>sudo systemctl start wazuh-agent</code></li>
+  </ol>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/26-agent-linuxclient-terminal.png" alt="Kali terminal downloading and installing the Wazuh agent deb package and enabling the service" loading="lazy">
+    <figcaption>Installing and enabling the Wazuh agent on LinuxClient1.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now both devices should be visible in the Wazuh Agents dashboard.</p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo">
+    <img src="images/homelab/27-wazuh-agents-dashboard.png" alt="Wazuh Agents dashboard showing WinClient1 and LinuxClient1 active" loading="lazy">
+    <figcaption>Both agents enrolled and active.</figcaption>
+  </figure>
+
+  <!-- ============================== FUTURE ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="future">
+    <span class="stage-num">→</span>
+    <h2>Future implementations</h2>
+  </div>
+
+  <!-- MODULE: checklist -->
+  <ul class="checklist">
+    <li>Separate admin and user privileges for both Windows and Linux client.</li>
+    <li>Send client telemetry to Wazuh server.</li>
+    <li>Add Wazuh agents to WinServer2025 and the Wazuh server itself.</li>
+    <li>Start Group Policy and configure permissions for clients.</li>
+    <li>Utilize a UTM.</li>
+    <li>Utilize an endpoint management platform to manage applications installed on clients.</li>
+    <li>Utilize a managed switch to expand the homelab by adding more VMs through other devices like a RPi.</li>
+  </ul>
+
+  <footer class="footer">
+    Mauricio Martinez · <a href="#home">Home</a>
+  </footer>
+
+    </main>
+  </div><!-- /layout -->
+
+</div>
+</div><!-- /view-lab -->
+
+<div class="lightbox" id="lightbox"><img src="" alt=""></div>
+
+<script>
+  // Lightbox: click any article image to zoom
+  const lb = document.getElementById('lightbox');
+  const lbImg = lb.querySelector('img');
+  document.querySelectorAll('figure.photo img').forEach(img => {
+    img.addEventListener('click', () => {
+      lbImg.src = img.src; lbImg.alt = img.alt; lb.classList.add('open');
+    });
+  });
+  lb.addEventListener('click', () => lb.classList.remove('open'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
+
+  // Copy buttons on code blocks
+  document.querySelectorAll('.codeblock .copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+      });
+    });
+  });
+
+  // --- view routing (#home vs #homelab + article anchors) ---
+  // When you add a stage to the article, add its id here and to the TOC.
+  const labIds = new Set(['homelab','intro','stage-1','stage-2','stage-3a','stage-3b','stage-3c',
+                          'stage-4','stage-5','stage-6','stage-6a','stage-6b','stage-7','future']);
+  const viewHome = document.getElementById('view-home');
+  const viewLab  = document.getElementById('view-lab');
+  const tabHome  = document.getElementById('tab-home');
+  const tabLab   = document.getElementById('tab-lab');
+  let lastLab = null;
+
+  function applyRoute() {
+    const h = location.hash.replace('#', '');
+    const lab = labIds.has(h);
+    const changed = lab !== lastLab;
+    viewHome.style.display = lab ? 'none' : 'block';
+    viewLab.style.display  = lab ? 'block' : 'none';
+    document.body.classList.toggle('view-lab', lab);
+    tabHome.classList.toggle('active', !lab);
+    tabLab.classList.toggle('active', lab);
+    document.title = lab ? 'Prod Lab | Mauricio Martinez' : 'Mauricio Martinez | Cybersecurity';
+    if (lab && h !== 'homelab') {
+      const el = document.getElementById(h);
+      if (el) el.scrollIntoView();
+    } else if (changed) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+    lastLab = lab;
+  }
+
+  function route() {
+    const h = location.hash.replace('#', '');
+    const lab = labIds.has(h);
+    const changed = lab !== lastLab;
+    const firstLoad = lastLab === null;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (changed && !firstLoad && !reduceMotion && document.startViewTransition) {
+      document.startViewTransition(applyRoute);   // cross-fade in supporting browsers
+    } else if (changed && !firstLoad) {
+      applyRoute();                               // fallback: fade the incoming view
+      const view = lab ? viewLab : viewHome;
+      view.classList.remove('fade-in');
+      void view.offsetWidth;
+      view.classList.add('fade-in');
+    } else {
+      applyRoute();
+    }
+  }
+  window.addEventListener('hashchange', route);
+  route();
+</script>
 </body>
 </html>
