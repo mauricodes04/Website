@@ -300,6 +300,13 @@
     const clone = previewEl.cloneNode(true);
     clone.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
     clone.querySelectorAll('details[open]').forEach(e => e.removeAttribute('open'));
+    // scrub artifacts injected by browser extensions (Grammarly & co.)
+    clone.querySelectorAll('grammarly-extension, [data-grammarly-shadow-root]').forEach(e => e.remove());
+    clone.querySelectorAll('*').forEach(e => {
+      for (const a of Array.from(e.attributes)) {
+        if (a.name === 'spellcheck' || a.name.startsWith('data-gramm')) e.removeAttribute(a.name);
+      }
+    });
     let html = serializeBack(clone.innerHTML);
     if (!/\n\s*$/.test(html)) html += '\n\n  ';
     return html;
@@ -351,7 +358,10 @@
   function wirePreviewEditing(preview, block) {
     const startEdit = el => {
       if (el.isContentEditable) return;
-      el.setAttribute('contenteditable', 'true');
+      // plaintext-only stops the browser from inserting styled div/span
+      // wrappers while typing; fall back to true where unsupported
+      el.setAttribute('contenteditable', 'plaintext-only');
+      if (!el.isContentEditable) el.setAttribute('contenteditable', 'true');
       el.focus();
       el.addEventListener('blur', () => {
         el.removeAttribute('contenteditable');
