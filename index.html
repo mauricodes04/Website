@@ -534,6 +534,7 @@
         <li><a href="#stage-5">5 · Wazuh server</a></li>
         <li><a href="#stage-6">6 · Client VMs</a></li>
         <li><a href="#stage-7">7 · Wazuh agents</a></li>
+        <li><a href="#stage-8">8 · Admin vs user privileges</a></li>
         <li><a href="#future">Future implementations</a></li>
         <!-- toc:auto:end -->
       </ol>
@@ -1291,6 +1292,217 @@ sudo bash ./wazuh-install.sh -a</pre>
     <figcaption>All agents enrolled and active.</figcaption>
   </figure>
 
+  <!-- ============================== STAGE 8 ============================== -->
+  <!-- MODULE: stage -->
+  <div class="stage" id="stage-8" data-toc="Admin vs user privileges">
+    <span class="stage-num">8</span>
+    <h2>Separating admin and user privileges</h2>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Up to this point both clients were running on local accounts with full administrative rights — which is exactly what you don’t want in a real environment.
+    The goal here is <strong>least privilege</strong>: employees log in with domain accounts that can’t install software or change system settings, and administrative rights are granted through a single Active Directory group rather than handed out per machine.
+    Both the Windows and the Linux client authenticate against the same domain, so one group membership controls elevation everywhere.
+  </p>
+
+  <!-- MODULE: substage -->
+  <div class="substage" id="stage-8a">
+    <h3><span class="sub-num">8a</span>Organizing the domain</h3>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    On WinServer2025, open <code>Server Manager → Tools → Active Directory Users and Computers</code>.
+    Before creating any accounts, build an OU structure so accounts, computers, and groups stay separated — this is what Group Policy will later be scoped against.
+  </p>
+  <ol class="steps">
+    <li>Right click <code>homelab.internal</code> → <code>New → Organizational Unit</code> → <strong>Prod Lab</strong></li>
+    <li>Right click <strong>Prod Lab</strong> → <code>New → Organizational Unit</code> → <strong>Accounts</strong>, <strong>Computers</strong>, <strong>Groups</strong></li>
+    <li>Right click <strong>Accounts</strong> → <code>New → Organizational Unit</code> → <strong>Users</strong>, <strong>Admins</strong></li>
+    <li>Right click <strong>Computers</strong> → <code>New → Organizational Unit</code> → <strong>Workstations</strong>, <strong>Servers</strong></li>
+  </ol>
+
+  <!-- MODULE: photo -->
+  <figure class="photo small">
+    <img src="images/homelab/28-aduc-ou-structure.png" alt="Active Directory Users and Computers tree showing the Prod Lab OU containing Accounts (Users, Admins), Computers (Workstations, Servers), and Groups" loading="lazy">
+    <figcaption>The Prod Lab OU structure.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">In the <strong>Groups</strong> OU, go to <code>New → Group</code> and create both security groups:</p>
+
+  <!-- MODULE: table -->
+  <div class="table-scroll">
+    <table>
+      <caption>Security groups</caption>
+      <thead><tr><th>Group name</th><th>Scope</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>SG-Standard-Users</code></td><td>Global</td><td>Security</td><td>Everyday employee accounts — no elevation</td></tr>
+        <tr><td><code>SG-IT-Admins</code></td><td>Global</td><td>Security</td><td>Grants local admin on domain-joined machines</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now in the <strong>Users</strong> OU, go to <code>New → User</code> and create the two employee accounts:</p>
+  <ol class="steps">
+    <li>First name <code>Employee</code>, last name <code>1</code>, user logon name <code>employee1</code></li>
+    <li>First name <code>Employee</code>, last name <code>2</code>, user logon name <code>employee2</code></li>
+    <li>For both, set a password and check <strong>“User must change password at next logon”</strong>.</li>
+  </ol>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Select both users → right click → <code>Add to a group</code> → type <code>SG-Standard-Users</code>.<br>
+    Then, in the main <strong>Users</strong> container (the built-in one, not the Prod Lab OU), double click <strong>Administrator</strong> → <code>Member Of</code> tab → <code>Add</code> → type <code>SG-IT-Admins</code> → <code>Check Names → OK → Apply → OK</code>.
+  </p>
+
+  <!-- MODULE: substage -->
+  <div class="substage" id="stage-8b">
+    <h3><span class="sub-num">8b</span>WinClient1</h3>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Join the workstation to the domain:
+    <code>Settings → System → About → Domain or workgroup → Change</code>, then under <strong>Member of</strong> select <strong>Domain</strong> and enter <code>homelab.internal</code>.
+  </p>
+
+  <!-- MODULE: photo -->
+  <figure class="photo small">
+    <img src="images/homelab/29-winclient-domain-join.png" alt="Computer Name/Domain Changes dialog with computer name WinClient1 and Member of Domain set to homelab.internal" loading="lazy">
+    <figcaption>Joining WinClient1 to <code>homelab.internal</code>.</figcaption>
+  </figure>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Click OK, enter the Administrator credentials, and restart when prompted.</p>
+  <ol class="steps">
+    <li>After reboot, at the login screen click <strong>Other user</strong>.</li>
+    <li>Sign in as <code>HOMELAB\Administrator</code> with the domain admin password.</li>
+    <li>Open <code>Settings → System → About</code>. Under “Device specifications”, the <strong>Domain</strong> field should read <code>homelab.internal</code>.</li>
+  </ol>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    While signed in as <code>HOMELAB\Administrator</code>, right click Start → <code>Computer Management</code> → <code>Local Users and Groups → Groups</code> → double click <strong>Administrators</strong>.
+    The member list should only have:
+  </p>
+  <ul class="prose">
+    <li><code>Administrator</code></li>
+    <li><code>HOMELAB\Domain Admins</code></li>
+  </ul>
+  <p class="prose">If <code>employee1</code> is listed, remove it → <code>Apply → OK</code>.</p>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    To grant elevation through the group instead, stay in the Administrators properties window and click <code>Add</code> →
+    <code>Locations → homelab.internal → OK</code> → type <code>SG-IT-Admins</code> → <code>Check Names → OK → Apply → OK</code>.
+  </p>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Finally, disable the local Employee 1 account so the machine can only be used with the AD account.
+    In Computer Management go to <code>Local Users and Groups → Users</code> → <strong>Employee 1</strong> Properties → check <strong>“Account is disabled”</strong> → <code>Apply → OK</code>.
+  </p>
+
+  <!-- MODULE: substage -->
+  <div class="substage" id="stage-8c">
+    <h3><span class="sub-num">8c</span>LinuxClient1</h3>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Install the domain join and SSSD tooling:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>sudo apt update
+sudo apt install -y realmd sssd sssd-tools libnss-sss libpam-sss \
+  libsss-sudo adcli samba-common-bin krb5-user packagekit</pre>
+  </div>
+
+  <!-- MODULE: callout -->
+  <div class="callout">
+    <span class="callout-label">Note</span>
+    If the installer asks for a realm name, enter <code>HOMELAB.INTERNAL</code> in all caps — Kerberos realms are case sensitive.
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Verify the realm, DNS, and domain discovery before joining:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>cat /etc/krb5.conf | grep default_realm
+nslookup homelab.internal
+realm discover homelab.internal
+sudo realm join -U Administrator homelab.internal</pre>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Now edit <code>/etc/sssd/sssd.conf</code> with <code>sudo nano /etc/sssd/sssd.conf</code> so SSSD handles sudo rules and creates home directories:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>[sssd]
+services = nss, pam, sudo
+
+[domain/homelab.internal]
+fallback_homedir = /home/%u
+sudo_provider = ad</pre>
+  </div>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>sudo systemctl restart sssd
+sudo systemctl enable sssd</pre>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Enable automatic home directory creation:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>sudo pam-auth-update --enable mkhomedir</pre>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Then configure sudo for the AD admins group — the Linux equivalent of adding <code>SG-IT-Admins</code> to local Administrators on Windows:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>echo '%sg-it-admins ALL=(ALL:ALL) ALL' | sudo tee /etc/sudoers.d/domain-admins
+sudo chmod 440 /etc/sudoers.d/domain-admins
+sudo visudo -c -f /etc/sudoers.d/domain-admins</pre>
+  </div>
+
+  <!-- MODULE: callout -->
+  <div class="callout">
+    <span class="callout-label">Note</span>
+    The group is written lowercase as <code>%sg-it-admins</code> — SSSD normalizes AD group names to lowercase, so the casing used in Active Directory won’t match here.
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">Last, disable the local <code>employee2</code> account so the workstation can only be used with the domain account:</p>
+
+  <!-- MODULE: code -->
+  <div class="codeblock">
+    <button class="copy-btn" type="button">Copy</button>
+    <pre>sudo usermod -L employee2
+sudo usermod -s /usr/sbin/nologin employee2</pre>
+  </div>
+
+  <!-- MODULE: prose -->
+  <p class="prose">
+    Now log out and back in with the username <code>employee2</code> and the AD password.
+    This creates a home directory for <code>employee2</code> and gives that account no admin privileges — matching the standard user on the Windows side.
+  </p>
+
   <!-- ============================== FUTURE ============================== -->
   <!-- MODULE: stage -->
   <div class="stage" id="future" data-toc="Future implementations">
@@ -1300,7 +1512,6 @@ sudo bash ./wazuh-install.sh -a</pre>
 
   <!-- MODULE: checklist -->
   <ul class="checklist">
-    <li>Separate admin and user privileges for both Windows and Linux client.</li>
     <li>Send client telemetry to Wazuh server.</li>
     <li>Start Group Policy and configure permissions for clients.</li>
     <li>Utilize a UTM.</li>
