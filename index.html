@@ -984,9 +984,15 @@ Do you want to proceed? Y</pre>
 
   <!-- MODULE: photo -->
   <figure class="photo">
-    <img src="images/homelab/06-pfsense-port-aliases.png" alt="pfSense port aliases: AD_mgmt with Kerberos, RPC, LDAP, SMB ports and mgmt with 443, 80, 22" loading="lazy">
-    <figcaption>Port aliases — <code>AD_mgmt</code> (Kerberos, RPC EPM, LDAP/LDAPS, SMB, Global Catalog) and <code>mgmt</code> (443, 80, 22).</figcaption>
+    <img src="images/homelab/06-pfsense-port-aliases.png" alt="pfSense port aliases: AD_mgmt with ports 88, 135, 389, 445, 636, 3268, 3269, 464 and mgmt with 443, 80, 22" loading="lazy">
+    <figcaption>Port aliases — <code>AD_mgmt</code> (Kerberos, RPC EPM, LDAP/LDAPS, SMB, Global Catalog, kpasswd) and <code>mgmt</code> (443, 80, 22).</figcaption>
   </figure>
+
+  <!-- MODULE: callout -->
+  <div class="callout">
+    <span class="callout-label">Note</span>
+    Include <code>464</code> (Kerberos <code>kpasswd</code>) in the <code>AD_mgmt</code> alias now. It’s easy to miss because the domain join in <a href="#stage-8">Stage 8</a> still succeeds without it — but the forced password change at a user’s first logon will silently fail.
+  </div>
 
   <!-- MODULE: prose -->
   <p class="prose"><code>Firewall → Rules</code></p>
